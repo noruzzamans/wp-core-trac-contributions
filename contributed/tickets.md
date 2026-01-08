@@ -6,7 +6,7 @@
 - https://core.trac.wordpress.org/ticket/63557#comment:2 - **Metadata Updates**
 
 ## Bundled Themes
-- https://core.trac.wordpress.org/ticket/64211#comment:10 - **Props Received** ✅
+- https://core.trac.wordpress.org/ticket/64211#comment:10 - **Test Report** (Props Received ✅)
 
 ## Block Editor
 - https://core.trac.wordpress.org/ticket/63935#comment:2 - **Reproduction Report**
