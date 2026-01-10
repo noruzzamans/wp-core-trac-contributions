@@ -29,23 +29,13 @@ const KNOWN_TICKETS = [
 
     // Bundled Themes
     { id: 64211, comment: 10, type: 'test-report', component: 'Bundled Themes', props: true, changeset: 61309, isMerged: true, title: 'Twenty Eleven: Improve PHP DocBlock compliance', focuses: 'coding-standards', keywords: 'has-patch', milestone: '6.8' },
-    { id: 40557, type: 'participation', component: 'Bundled Themes', title: 'List Block indentation issue in Twenty Fifteen & Twenty Sixteen Themes (Editor Side)', focuses: '', keywords: 'dev-feedback', milestone: '' },
-    { id: 61982, type: 'participation', component: 'Bundled Themes', title: 'Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations', focuses: '', keywords: 'has-patch', milestone: '7.0' },
-    { id: 62605, type: 'participation', component: 'Bundled Themes', title: 'Grid block background causes inconsistent padding on frontend', focuses: '', keywords: 'dev-feedback', milestone: '6.8.3' },
 
     // Coding Standards
     { id: 64262, type: 'participation', component: 'Coding Standards', title: 'Docblock improvements for 7.0', focuses: 'coding-standards', keywords: '', milestone: '7.0' },
 
-    // General
-    { id: 64324, type: 'participation', component: 'General', title: 'Outlined buttons now have grey background', focuses: '', keywords: 'has-patch', milestone: '6.9.1' },
-
     // Performance
-    { id: 62697, type: 'participation', component: 'Site Health', title: 'Add OPCache to Site Health', focuses: 'performance', keywords: 'has-patch', milestone: '7.0' },
     { id: 64354, comment: 24, type: 'test-report', component: 'Performance', title: 'OPCache: Preloading WordPress PHP files', focuses: 'performance', keywords: 'has-patch, needs-testing', milestone: '7.0' },
     { id: 63697, comment: 24, type: 'test-report', component: 'Performance', title: 'Optimize CSS loading in admin', focuses: 'performance', keywords: 'has-patch', milestone: '' },
-
-    // Posts, Post Types
-    { id: 63091, type: 'participation', component: 'Posts, Post Types', title: 'Dashboard collapsing published posts count with alt-press', focuses: '', keywords: 'commit', milestone: '7.0' },
 
     // Upload/Media
     { id: 29798, type: 'participation', component: 'Upload/Media', title: 'Unified theme and plugin uploader', focuses: '', keywords: 'feature-request', milestone: '' },

@@ -3,7 +3,7 @@
 Tickets where I contributed but haven't received props yet.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: 2026-01-10T17:31:35.675Z -->
+<!-- Last synced: 2026-01-10T17:45:53.918Z -->
 
 ## ⏳ Open/Pending
 
@@ -31,29 +31,9 @@ Tickets where I contributed but haven't received props yet.
   - **Contribution**: 💬 Participation
   - **Component**: Block Editor
 
-- ⏳ [#40557](https://core.trac.wordpress.org/ticket/40557) - List Block indentation issue in Twenty Fifteen & Twenty Sixteen Themes (Editor Side)
-  - **Contribution**: 💬 Participation
-  - **Component**: Bundled Themes
-
-- ⏳ [#61982](https://core.trac.wordpress.org/ticket/61982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
-  - **Contribution**: 💬 Participation
-  - **Component**: Bundled Themes
-
-- ⏳ [#62605](https://core.trac.wordpress.org/ticket/62605) - Grid block background causes inconsistent padding on frontend
-  - **Contribution**: 💬 Participation
-  - **Component**: Bundled Themes
-
 - ⏳ [#64262](https://core.trac.wordpress.org/ticket/64262) - Docblock improvements for 7.0
   - **Contribution**: 💬 Participation
   - **Component**: Coding Standards
-
-- ⏳ [#64324](https://core.trac.wordpress.org/ticket/64324) - Outlined buttons now have grey background
-  - **Contribution**: 💬 Participation
-  - **Component**: General
-
-- ⏳ [#62697](https://core.trac.wordpress.org/ticket/62697) - Add OPCache to Site Health
-  - **Contribution**: 💬 Participation
-  - **Component**: Site Health
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - OPCache: Preloading WordPress PHP files
   - **Contribution**: 🧪 Test Report
@@ -63,10 +43,6 @@ Tickets where I contributed but haven't received props yet.
   - **Contribution**: 🧪 Test Report
   - **Component**: Performance
 
-- ⏳ [#63091](https://core.trac.wordpress.org/ticket/63091) - Dashboard collapsing published posts count with alt-press
-  - **Contribution**: 💬 Participation
-  - **Component**: Posts, Post Types
-
 - ⏳ [#29798](https://core.trac.wordpress.org/ticket/29798) - Unified theme and plugin uploader
   - **Contribution**: 💬 Participation
   - **Component**: Upload/Media
@@ -74,4 +50,4 @@ Tickets where I contributed but haven't received props yet.
 <!-- AUTO-SYNC END -->
 
 ---
-**Total Without Props**: 16
+**Total Without Props**: 10
