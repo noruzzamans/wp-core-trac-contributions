@@ -3,29 +3,29 @@
 All testing contributions - test reports and patch testing.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: 2026-01-10T17:51:52.134Z -->
+<!-- Last synced: 2026-01-10T17:59:57.760Z -->
 
 ## 🧪 Test Reports
 
-- ✅ [#64211](https://core.trac.wordpress.org/ticket/64211#comment:10) - Twenty Eleven: Improve PHP DocBlock compliance with WordPress Documentation Standards
+- ⏳ [#64211](https://core.trac.wordpress.org/ticket/64211) - Twenty Eleven: Improve PHP DocBlock compliance with WordPress Documentation Standards
   - **Component**: Bundled Themes
   - **Milestone**: 7.0
-  - **Focuses**: coding-standards
+  - **Focuses**: docs
   - **Keywords**: has-patch
 
-- ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982#comment:6) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
+- ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
   - **Component**: Bundled Themes
   - **Milestone**: 7.0
   - **Focuses**: accessibility
-  - **Keywords**: has-patch
+  - **Keywords**: needs-design-feedback has-patch
 
 ## 🔧 Patch Testing
 
-- ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065#comment:6) - Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading
+- ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065) - Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.
   - **Component**: Accessibility
   - **Milestone**: 7.0
-  - **Focuses**: accessibility
-  - **Keywords**: has-patch
+  - **Focuses**: ui, accessibility, css
+  - **Keywords**: has-patch has-test-info
 
 <!-- AUTO-SYNC END -->
 

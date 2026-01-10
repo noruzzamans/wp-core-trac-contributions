@@ -16,26 +16,16 @@ const README_FILE = path.join(ROOT_DIR, 'README.md');
 
 // Known ticket contributions (manually tracked + auto-discovered)
 // This serves as a base - the script will also search for new ones
-// Known ticket contributions (manually tracked + auto-discovered)
-// This serves as a base - the script will also search for new ones
+// Known tickets (manually tracked metadata fallback)
+// The script primarily uses auto-discovery, this is for fallback/overrides
 const KNOWN_TICKETS = [
-    // 7.0 Milestone Tickets (from screenshot)
-    { id: 63697, type: 'participation', component: 'Site Health', title: 'Add OPCache to Site Health', focuses: 'performance', keywords: 'enhancement, has-patch', milestone: '7.0' },
-    { id: 43084, type: 'participation', component: 'Posts, Post Types', title: 'dashboard confuses published posts count with all posts', focuses: '', keywords: 'commit', milestone: '7.0' },
-    { id: 64211, comment: 10, type: 'test-report', component: 'Bundled Themes', props: true, changeset: 61309, isMerged: true, title: 'Twenty Eleven: Improve PHP DocBlock compliance with WordPress Documentation Standards', focuses: 'coding-standards', keywords: 'has-patch', milestone: '7.0' },
-    { id: 64065, comment: 6, type: 'patch-testing', component: 'Accessibility', title: 'Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading', focuses: 'accessibility', keywords: 'has-patch', milestone: '7.0' },
-    { id: 64262, type: 'participation', component: 'Coding Standards', title: 'Coding Standards: Fix improper @return tag documentation across core files', focuses: 'coding-standards', keywords: 'has-patch', milestone: '7.0' },
-    { id: 62982, comment: 6, type: 'test-report', component: 'Bundled Themes', title: 'Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations', focuses: 'accessibility', keywords: 'has-patch', milestone: '7.0' },
-
-    // Other Tickets from screenshot
-    { id: 64354, type: 'participation', component: 'Script Loader', title: 'Outlined buttons now have grey background', focuses: '', keywords: 'has-patch', milestone: '6.9.1' },
-    { id: 63557, type: 'participation', component: 'Bundled Themes', title: 'List Block Indentation Issue in Twenty Fifteen & Twenty Sixteen Themes (Editor Side)', focuses: '', keywords: 'dev-feedback', milestone: 'Awaiting Review' },
-    { id: 29798, type: 'participation', component: 'General', title: 'unified theme and plugin uploader', focuses: '', keywords: 'feature request, has-patch', milestone: 'Future Release' },
-    { id: 63935, type: 'participation', component: 'Bundled Themes', title: 'Grid block background causes inconsistent padding on frontend', focuses: '', keywords: 'dev-feedback', milestone: 'Awaiting Review' },
-    { id: 62028, type: 'participation', component: 'Editor', title: 'Paragraph margins not honored (in the backend) when global blockspacing is set to zero (new issue in 6.6.1)', focuses: '', keywords: 'reporter-feedback', milestone: '6.6.1' },
-
-    // Keep original legacy tickets if not in screenshot but valid (Optional, for now matching screenshot strictly + preserving distinct IDs from before if they differ)
-    { id: 63557, comment: 2, type: 'metadata', component: 'Accessibility', title: 'Add focus styles for skip links', focuses: 'accessibility', keywords: '', milestone: '' },
+    // 7.0 Milestone Tickets
+    { id: 63697, type: 'participation', focuses: 'performance', keywords: 'enhancement, has-patch', milestone: '7.0' },
+    { id: 43084, type: 'participation', keywords: 'commit', milestone: '7.0' },
+    { id: 64211, type: 'test-report', component: 'Bundled Themes', focuses: 'coding-standards', keywords: 'has-patch', milestone: '7.0' },
+    { id: 64065, type: 'patch-testing', component: 'Accessibility', focuses: 'accessibility', keywords: 'has-patch', milestone: '7.0' },
+    { id: 64262, type: 'participation', component: 'Coding Standards', focuses: 'coding-standards', keywords: 'has-patch', milestone: '7.0' },
+    { id: 62982, type: 'test-report', component: 'Bundled Themes', focuses: 'accessibility', keywords: 'has-patch', milestone: '7.0' }
 ];
 
 // Date helpers
@@ -53,11 +43,54 @@ const getMonthYear = (dateStr) => {
     return { month: months[date.getMonth()], year: date.getFullYear() };
 };
 
+// Auto-discover tickets involved in
+async function fetchUserTicketsFromTrac() {
+    console.log(`🔍 Auto-discovering tickets for user: ${USERNAME}...`);
+    // Query finds tickets where user commented (most common)
+    // We start with this proven query that worked in testing
+    const queryUrl = `${TRAC_BASE_URL}/query?comment=~${USERNAME}&col=id&col=summary&col=component&col=status&col=type&col=milestone&order=changetime&desc=1&max=100`;
+
+    try {
+        const response = await fetch(queryUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
+
+        if (!response.ok) throw new Error(`Trac query failed: ${response.status}`);
+
+        const html = await response.text();
+        const $ = cheerio.load(html);
+        const tickets = [];
+
+        // Parse the query result table
+        $('td.id a').each((i, el) => {
+            const href = $(el).attr('href');
+            if (href && href.includes('/ticket/')) {
+                const id = href.split('/').pop().replace('#comment:', '').split('#')[0];
+                if (id && !isNaN(id) && !tickets.includes(parseInt(id))) {
+                    tickets.push(parseInt(id));
+                }
+            }
+        });
+
+        console.log(`   Found ${tickets.length} potential tickets from Trac query`);
+        return tickets;
+    } catch (error) {
+        console.error('   ❌ Auto-discovery failed:', error.message);
+        return [];
+    }
+}
+
 // Fetch ticket details from Trac
 async function fetchTicketDetails(ticketId) {
     try {
         const url = `${TRAC_BASE_URL}/ticket/${ticketId}`;
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
         const html = await response.text();
         const $ = cheerio.load(html);
 
@@ -121,63 +154,51 @@ async function checkPropsInChangeset(changesetId) {
     }
 }
 
-// Search Trac for user contributions
-async function searchUserContributions() {
-    console.log('📥 Searching for user contributions on Trac...');
-    const contributions = [];
-
-    try {
-        // Search for mentions of username
-        const searchUrl = `${TRAC_BASE_URL}/search?q=${USERNAME}&noquickjump=1&changeset=on&ticket=on`;
-        const response = await fetch(searchUrl);
-        const html = await response.text();
-        const $ = cheerio.load(html);
-
-        // Extract ticket mentions from search results
-        $('dt a').each((i, el) => {
-            const href = $(el).attr('href');
-            const text = $(el).text();
-
-            if (href && href.includes('/ticket/')) {
-                const match = href.match(/\/ticket\/(\d+)/);
-                if (match) {
-                    const ticketId = parseInt(match[1]);
-                    // Check if not already in known tickets
-                    if (!KNOWN_TICKETS.find(t => t.id === ticketId)) {
-                        contributions.push({
-                            id: ticketId,
-                            title: text,
-                            type: 'participation',
-                            discovered: true
-                        });
-                    }
-                }
-            }
-        });
-
-        console.log(`   Found ${contributions.length} additional tickets from search`);
-    } catch (error) {
-        console.error('Error searching Trac:', error.message);
-    }
-
-    return contributions;
-}
-
 // Process all tickets and gather full details
 async function processAllTickets() {
     console.log('📥 Processing all tickets...');
 
     // Combine known tickets with discovered ones
-    const discoveredTickets = await searchUserContributions();
-    const allTicketConfigs = [...KNOWN_TICKETS, ...discoveredTickets];
+    // Use a Map to ensure unique IDs, preferring KNOWN_TICKETS metadata
+    const ticketMap = new Map();
 
+    // 1. Add KNOWN_TICKETS first (they act as overrides/metadata source)
+    for (const ticket of KNOWN_TICKETS) {
+        ticketMap.set(ticket.id, ticket);
+    }
+
+    // 2. Fetch/Discover tickets from Trac
+    const discoveredIds = await fetchUserTicketsFromTrac();
+    for (const id of discoveredIds) {
+        if (!ticketMap.has(id)) {
+            ticketMap.set(id, { id: id, type: 'participation', discovered: true });
+        }
+    }
+
+    const allTicketConfigs = Array.from(ticketMap.values());
     const tickets = [];
 
     for (const config of allTicketConfigs) {
         console.log(`   Fetching details for ticket #${config.id}...`);
+        // Add minimal delay to avoid rigorous rate limiting
+        await new Promise(resolve => setTimeout(resolve, 300));
+
         const details = await fetchTicketDetails(config.id);
 
         if (details) {
+            // Verify participation for auto-discovered tickets (strict mode)
+            // If it's a KNOWN_TICKET, we trust it. If discovered, check if user is reporter or commenter.
+            const isKnown = KNOWN_TICKETS.some(t => t.id === config.id);
+            const isParticipant = isKnown ||
+                details.reporter === USERNAME ||
+                (details.comments && details.comments.some(c => c.author === USERNAME));
+
+            if (!isParticipant) {
+                // Skip tickets where user is mentioned but didn't participate, unless manually tracked
+                // console.log(`   Skipping #${config.id} - No direct participation found`);
+                continue;
+            }
+
             // Merge config with fetched details
             const ticket = {
                 ...details,
@@ -206,10 +227,10 @@ async function processAllTickets() {
 
             tickets.push(ticket);
         }
-
-        // Rate limiting - be nice to Trac server
-        await new Promise(resolve => setTimeout(resolve, 500));
     }
+
+    // Sort by ID descending (newest first)
+    tickets.sort((a, b) => b.id - a.id);
 
     console.log(`   Processed ${tickets.length} tickets total`);
     console.log(`   - With Props: ${tickets.filter(t => t.hasProps).length}`);

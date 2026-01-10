@@ -3,25 +3,25 @@
 My contributions targeting WordPress 7.0 release.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: 2026-01-10T17:51:52.136Z -->
+<!-- Last synced: 2026-01-10T17:59:57.761Z -->
 
 ## Accessibility
 
-### ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065#comment:6)
-**Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading**
+### ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065)
+**Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.**
 
 | Field | Value |
 |-------|-------|
 | Type | 🔧 Patch Testing |
 | Component | Accessibility |
 | Milestone | 7.0 |
-| Focuses | accessibility |
-| Keywords | has-patch |
+| Focuses | ui, accessibility, css |
+| Keywords | has-patch has-test-info |
 | Props | ⏳ Pending |
 
 ## Bundled Themes
 
-### ✅ [#64211](https://core.trac.wordpress.org/ticket/64211#comment:10)
+### ⏳ [#64211](https://core.trac.wordpress.org/ticket/64211)
 **Twenty Eleven: Improve PHP DocBlock compliance with WordPress Documentation Standards**
 
 | Field | Value |
@@ -29,11 +29,11 @@ My contributions targeting WordPress 7.0 release.
 | Type | 🧪 Test Report |
 | Component | Bundled Themes |
 | Milestone | 7.0 |
-| Focuses | coding-standards |
+| Focuses | docs |
 | Keywords | has-patch |
-| Props | ✅ Received |
+| Props | ⏳ Pending |
 
-### ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982#comment:6)
+### ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982)
 **Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations**
 
 | Field | Value |
@@ -42,7 +42,7 @@ My contributions targeting WordPress 7.0 release.
 | Component | Bundled Themes |
 | Milestone | 7.0 |
 | Focuses | accessibility |
-| Keywords | has-patch |
+| Keywords | needs-design-feedback has-patch |
 | Props | ⏳ Pending |
 
 ## Coding Standards
@@ -55,7 +55,7 @@ My contributions targeting WordPress 7.0 release.
 | Type | 💬 Participation |
 | Component | Coding Standards |
 | Milestone | 7.0 |
-| Focuses | coding-standards |
+| Focuses | docs, coding-standards |
 | Keywords | has-patch |
 | Props | ⏳ Pending |
 
@@ -69,7 +69,8 @@ My contributions targeting WordPress 7.0 release.
 | Type | 💬 Participation |
 | Component | Posts, Post Types |
 | Milestone | 7.0 |
-| Keywords | commit |
+| Focuses | ui, accessibility, administration |
+| Keywords | has-screenshots has-patch has-test-info commit |
 | Props | ⏳ Pending |
 
 ## Site Health
@@ -83,7 +84,7 @@ My contributions targeting WordPress 7.0 release.
 | Component | Site Health |
 | Milestone | 7.0 |
 | Focuses | performance |
-| Keywords | enhancement, has-patch |
+| Keywords | has-patch needs-testing |
 | Props | ⏳ Pending |
 
 <!-- AUTO-SYNC END -->
@@ -92,6 +93,6 @@ My contributions targeting WordPress 7.0 release.
 ## Summary
 | Status | Count |
 |--------|-------|
-| ✅ Props Received | 1 |
-| ⏳ Pending | 5 |
+| ✅ Props Received | 0 |
+| ⏳ Pending | 6 |
 | **Total 7.0 Tickets** | **6** |
