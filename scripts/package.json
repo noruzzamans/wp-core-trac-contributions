@@ -1,0 +1,13 @@
+{
+  "name": "trac-contributions-sync",
+  "version": "1.0.0",
+  "description": "Auto-sync WordPress Core Trac contributions",
+  "main": "sync.js",
+  "scripts": {
+    "sync": "node sync.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "node-fetch": "^2.7.0"
+  }
+}

@@ -1,12 +1,18 @@
 # Merged Tickets
 
-## 2026
+Tickets merged into WordPress Core where I received props.
 
-### January
+<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
+<!-- Last synced: 2026-01-10T15:37:19.042Z -->
+
+## 2025
+
+### November
 - ✅ [#64211](https://core.trac.wordpress.org/ticket/64211) - Twenty Eleven: Improve PHP DocBlock compliance
-  - **Merged in**: [Changeset 61309](https://core.trac.wordpress.org/changeset/61309)
-  - **Date**: November 25, 2025
-  - **Props**: huzaifaalmesbah, dhruvang21, juanfra, sabernhardt, **noruzzaman**, ravichudasama01, westonruter
+  - **Changeset**: [61309](https://core.trac.wordpress.org/changeset/61309)
+  - **Contribution**: 🧪 Test Report
+
+<!-- AUTO-SYNC END -->
 
 ---
-**Total Merged**: 1
+**Total Merged with Props**: 1

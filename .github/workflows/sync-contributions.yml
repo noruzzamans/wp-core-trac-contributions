@@ -1,0 +1,55 @@
+name: Sync Trac Contributions
+
+on:
+  # Run daily at midnight UTC
+  schedule:
+    - cron: '0 0 * * *'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./scripts
+      
+      - name: Run sync script
+        env:
+          TRAC_USERNAME: noruzzaman
+        run: node sync.js
+        working-directory: ./scripts
+      
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet || echo "changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Check if there are changes
+          if [[ -n $(git status -s) ]]; then
+            echo "📝 Changes detected, committing..."
+            git add -A
+            git commit -m "🔄 Auto-sync Trac contributions - $(date +'%Y-%m-%d')"
+            git push origin main
+          else
+            echo "✅ No changes needed"
+          fi
