@@ -11,6 +11,7 @@ const TRAC_BASE_URL = 'https://core.trac.wordpress.org';
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTRIBUTED_DIR = path.join(ROOT_DIR, 'contributed');
 const MERGED_DIR = path.join(ROOT_DIR, 'merged');
+const RELEASE_DIR = path.join(ROOT_DIR, '7.0-release');
 const README_FILE = path.join(ROOT_DIR, 'README.md');
 
 // Known ticket contributions (manually tracked + auto-discovered)
@@ -518,6 +519,68 @@ Tickets merged into WordPress Core where I received props.
     return content;
 }
 
+// Generate 7.0-release/tickets.md
+function generate7ReleaseTickets(tickets) {
+    const releaseTickets = tickets.filter(t => t.milestone && t.milestone.includes('7.0'));
+
+    let content = `# WordPress 7.0 Release Contributions
+
+My contributions targeting WordPress 7.0 release.
+
+<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
+<!-- Last synced: ${new Date().toISOString()} -->
+
+`;
+
+    if (releaseTickets.length === 0) {
+        content += `*No 7.0 milestone tickets yet*\n\n`;
+    } else {
+        // Group by component
+        const byComponent = {};
+        for (const ticket of releaseTickets) {
+            const comp = ticket.component || 'General';
+            if (!byComponent[comp]) byComponent[comp] = [];
+            byComponent[comp].push(ticket);
+        }
+
+        for (const component of Object.keys(byComponent).sort()) {
+            content += `## ${component}\n\n`;
+            for (const ticket of byComponent[component]) {
+                const propsIcon = ticket.hasProps ? '✅' : '⏳';
+                const typeLabel = getTypeLabel(ticket.type);
+                const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
+                content += `### ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink})\n`;
+                content += `**${ticket.title}**\n\n`;
+                content += `| Field | Value |\n`;
+                content += `|-------|-------|\n`;
+                content += `| Type | ${typeLabel} |\n`;
+                content += `| Component | ${ticket.component} |\n`;
+                content += `| Milestone | ${ticket.milestone} |\n`;
+                if (ticket.focuses) content += `| Focuses | ${ticket.focuses} |\n`;
+                if (ticket.keywords) content += `| Keywords | ${ticket.keywords} |\n`;
+                content += `| Props | ${ticket.hasProps ? '✅ Received' : '⏳ Pending'} |\n`;
+                content += `\n`;
+            }
+        }
+    }
+
+    const withProps = releaseTickets.filter(t => t.hasProps).length;
+    const pending = releaseTickets.filter(t => !t.hasProps).length;
+
+    content += `<!-- AUTO-SYNC END -->
+
+---
+## Summary
+| Status | Count |
+|--------|-------|
+| ✅ Props Received | ${withProps} |
+| ⏳ Pending | ${pending} |
+| **Total 7.0 Tickets** | **${releaseTickets.length}** |
+`;
+
+    return content;
+}
+
 // Update README with stats
 function updateReadme(tickets) {
     const total = tickets.length;
@@ -527,6 +590,7 @@ function updateReadme(tickets) {
     const patchTesting = tickets.filter(t => t.type === 'patch-testing').length;
     const open = tickets.filter(t => !t.isMerged).length;
     const propsRate = total > 0 ? Math.round((withProps / total) * 100) : 0;
+    const release70 = tickets.filter(t => t.milestone && t.milestone.includes('7.0')).length;
 
     // Count by component
     const byComponent = {};
@@ -556,11 +620,15 @@ Personal tracking for WordPress Core Trac contributions.
 ### ✅ Merged
 - 🎉 [Merged Tickets](./merged/tickets.md) - Merged into Core
 
+### 🚀 7.0 Release
+- 🎯 [7.0 Release Tickets](./7.0-release/tickets.md) - **${release70}** tickets targeted for WordPress 7.0
+
 ### 🎯 Goals
 - [2026 Goals](./next-targets/2026-goals.md) - Contribution targets
 - 👤 [About Me](./about-me.md) - Profile & expertise
 
 ## 📈 Stats (Auto-Updated)
+
 
 <table width="100%" style="width: 100% !important;">
 <tr>
@@ -619,6 +687,9 @@ async function main() {
     if (!fs.existsSync(MERGED_DIR)) {
         fs.mkdirSync(MERGED_DIR, { recursive: true });
     }
+    if (!fs.existsSync(RELEASE_DIR)) {
+        fs.mkdirSync(RELEASE_DIR, { recursive: true });
+    }
 
     // Process all tickets
     const tickets = await processAllTickets();
@@ -655,6 +726,13 @@ async function main() {
         generateMergedTickets(tickets)
     );
     console.log('   ✅ merged/tickets.md');
+
+    // Generate 7.0 release files
+    fs.writeFileSync(
+        path.join(RELEASE_DIR, 'tickets.md'),
+        generate7ReleaseTickets(tickets)
+    );
+    console.log('   ✅ 7.0-release/tickets.md');
 
     fs.writeFileSync(README_FILE, updateReadme(tickets));
     console.log('   ✅ README.md');

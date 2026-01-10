@@ -13,11 +13,15 @@ Personal tracking for WordPress Core Trac contributions.
 ### ✅ Merged
 - 🎉 [Merged Tickets](./merged/tickets.md) - Merged into Core
 
+### 🚀 7.0 Release
+- 🎯 [7.0 Release Tickets](./7.0-release/tickets.md) - **3** tickets targeted for WordPress 7.0
+
 ### 🎯 Goals
 - [2026 Goals](./next-targets/2026-goals.md) - Contribution targets
 - 👤 [About Me](./about-me.md) - Profile & expertise
 
 ## 📈 Stats (Auto-Updated)
+
 
 <table width="100%" style="width: 100% !important;">
 <tr>
