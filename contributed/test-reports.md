@@ -3,7 +3,7 @@
 All testing contributions - test reports and patch testing.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: 2026-01-10T17:19:26.488Z -->
+<!-- Last synced: 2026-01-10T17:31:35.675Z -->
 
 ## 🧪 Test Reports
 
@@ -31,7 +31,7 @@ All testing contributions - test reports and patch testing.
 
 ## 🔧 Patch Testing
 
-- ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065#comment:6) - Accessibility: Add screen reader text for icon-only buttons
+- ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065#comment:6) - Dragging theme/plugin ZIP outside file input field downloads file instead of uploading
   - **Component**: Accessibility
   - **Milestone**: 7.0
   - **Focuses**: accessibility

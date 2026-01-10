@@ -1,7 +1,7 @@
 # My Contributed Tickets (2025-2026)
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: 2026-01-10T17:19:26.485Z -->
+<!-- Last synced: 2026-01-10T17:31:35.673Z -->
 
 ## Accessibility
 - [#62982](https://core.trac.wordpress.org/ticket/62982#comment:6) - Screen Reader elements lack text to describe their general function
@@ -9,7 +9,7 @@
   - **Focuses**: accessibility
   - **Keywords**: has-patch
 
-- [#64065](https://core.trac.wordpress.org/ticket/64065#comment:6) - Accessibility: Add screen reader text for icon-only buttons
+- [#64065](https://core.trac.wordpress.org/ticket/64065#comment:6) - Dragging theme/plugin ZIP outside file input field downloads file instead of uploading
   - **Type**: 🔧 Patch Testing
   - **Milestone**: 7.0
   - **Focuses**: accessibility
@@ -29,6 +29,7 @@
 
 - [#62028](https://core.trac.wordpress.org/ticket/62028) - Paragraph margins not honored in the backend when global styles set
   - **Type**: 💬 Participation
+  - **Milestone**: 6.6.1
 
 ## Bundled Themes
 - [#64211](https://core.trac.wordpress.org/ticket/64211#comment:10) - Twenty Eleven: Improve PHP DocBlock compliance
@@ -37,11 +38,31 @@
   - **Focuses**: coding-standards
   - **Keywords**: has-patch
 
+- [#40557](https://core.trac.wordpress.org/ticket/40557) - List Block indentation issue in Twenty Fifteen & Twenty Sixteen Themes (Editor Side)
+  - **Type**: 💬 Participation
+  - **Keywords**: dev-feedback
+
+- [#61982](https://core.trac.wordpress.org/ticket/61982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
+  - **Type**: 💬 Participation
+  - **Milestone**: 7.0
+  - **Keywords**: has-patch
+
+- [#62605](https://core.trac.wordpress.org/ticket/62605) - Grid block background causes inconsistent padding on frontend
+  - **Type**: 💬 Participation
+  - **Milestone**: 6.8.3
+  - **Keywords**: dev-feedback
+
 ## Coding Standards
 - [#64262](https://core.trac.wordpress.org/ticket/64262) - Docblock improvements for 7.0
   - **Type**: 💬 Participation
   - **Milestone**: 7.0
   - **Focuses**: coding-standards
+
+## General
+- [#64324](https://core.trac.wordpress.org/ticket/64324) - Outlined buttons now have grey background
+  - **Type**: 💬 Participation
+  - **Milestone**: 6.9.1
+  - **Keywords**: has-patch
 
 ## Performance
 - [#64354](https://core.trac.wordpress.org/ticket/64354#comment:24) - OPCache: Preloading WordPress PHP files
@@ -55,9 +76,23 @@
   - **Focuses**: performance
   - **Keywords**: has-patch
 
-## Upload/Media
-- [#29798](https://core.trac.wordpress.org/ticket/29798) - Uploading large files causes time-outs or infinite loading
+## Posts, Post Types
+- [#63091](https://core.trac.wordpress.org/ticket/63091) - Dashboard collapsing published posts count with alt-press
   - **Type**: 💬 Participation
+  - **Milestone**: 7.0
+  - **Keywords**: commit
+
+## Site Health
+- [#62697](https://core.trac.wordpress.org/ticket/62697) - Add OPCache to Site Health
+  - **Type**: 💬 Participation
+  - **Milestone**: 7.0
+  - **Focuses**: performance
+  - **Keywords**: has-patch
+
+## Upload/Media
+- [#29798](https://core.trac.wordpress.org/ticket/29798) - Unified theme and plugin uploader
+  - **Type**: 💬 Participation
+  - **Keywords**: feature-request
 
 <!-- AUTO-SYNC END -->
 
@@ -67,4 +102,4 @@
 |----------|-------|
 | ✅ With Props | 1 |
 | 🔄 Merged | 1 |
-| **Total** | **11** |
+| **Total** | **17** |

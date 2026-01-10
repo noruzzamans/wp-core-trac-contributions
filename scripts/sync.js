@@ -17,17 +17,38 @@ const README_FILE = path.join(ROOT_DIR, 'README.md');
 // Known ticket contributions (manually tracked + auto-discovered)
 // This serves as a base - the script will also search for new ones
 const KNOWN_TICKETS = [
+    // Accessibility
     { id: 62982, comment: 6, type: 'test-report', component: 'Accessibility', title: 'Screen Reader elements lack text to describe their general function', focuses: 'accessibility', keywords: 'has-patch', milestone: '' },
-    { id: 64065, comment: 6, type: 'patch-testing', component: 'Accessibility', title: 'Accessibility: Add screen reader text for icon-only buttons', focuses: 'accessibility', keywords: 'has-patch, needs-testing', milestone: '7.0' },
+    { id: 64065, comment: 6, type: 'patch-testing', component: 'Accessibility', title: 'Dragging theme/plugin ZIP outside file input field downloads file instead of uploading', focuses: 'accessibility', keywords: 'has-patch, needs-testing', milestone: '7.0' },
     { id: 63557, comment: 2, type: 'metadata', component: 'Accessibility', title: 'Add focus styles for skip links', focuses: 'accessibility', keywords: '', milestone: '' },
-    { id: 64211, comment: 10, type: 'test-report', component: 'Bundled Themes', props: true, changeset: 61309, isMerged: true, title: 'Twenty Eleven: Improve PHP DocBlock compliance', focuses: 'coding-standards', keywords: 'has-patch', milestone: '6.8' },
+
+    // Block Editor
     { id: 63935, comment: 2, type: 'reproduction', component: 'Block Editor', title: 'Paragraph margins not honored in the backend with global styles', focuses: '', keywords: '', milestone: '' },
     { id: 43084, comment: 9, type: 'patch-testing', component: 'Block Editor', title: 'Media Library: Custom Taxonomy Bulk Edit support', focuses: '', keywords: 'has-patch', milestone: '' },
-    { id: 62028, type: 'participation', component: 'Block Editor', title: 'Paragraph margins not honored in the backend when global styles set', focuses: '', keywords: '', milestone: '' },
+    { id: 62028, type: 'participation', component: 'Block Editor', title: 'Paragraph margins not honored in the backend when global styles set', focuses: '', keywords: '', milestone: '6.6.1' },
+
+    // Bundled Themes
+    { id: 64211, comment: 10, type: 'test-report', component: 'Bundled Themes', props: true, changeset: 61309, isMerged: true, title: 'Twenty Eleven: Improve PHP DocBlock compliance', focuses: 'coding-standards', keywords: 'has-patch', milestone: '6.8' },
+    { id: 40557, type: 'participation', component: 'Bundled Themes', title: 'List Block indentation issue in Twenty Fifteen & Twenty Sixteen Themes (Editor Side)', focuses: '', keywords: 'dev-feedback', milestone: '' },
+    { id: 61982, type: 'participation', component: 'Bundled Themes', title: 'Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations', focuses: '', keywords: 'has-patch', milestone: '7.0' },
+    { id: 62605, type: 'participation', component: 'Bundled Themes', title: 'Grid block background causes inconsistent padding on frontend', focuses: '', keywords: 'dev-feedback', milestone: '6.8.3' },
+
+    // Coding Standards
     { id: 64262, type: 'participation', component: 'Coding Standards', title: 'Docblock improvements for 7.0', focuses: 'coding-standards', keywords: '', milestone: '7.0' },
-    { id: 29798, type: 'participation', component: 'Upload/Media', title: 'Uploading large files causes time-outs or infinite loading', focuses: '', keywords: '', milestone: '' },
+
+    // General
+    { id: 64324, type: 'participation', component: 'General', title: 'Outlined buttons now have grey background', focuses: '', keywords: 'has-patch', milestone: '6.9.1' },
+
+    // Performance
+    { id: 62697, type: 'participation', component: 'Site Health', title: 'Add OPCache to Site Health', focuses: 'performance', keywords: 'has-patch', milestone: '7.0' },
     { id: 64354, comment: 24, type: 'test-report', component: 'Performance', title: 'OPCache: Preloading WordPress PHP files', focuses: 'performance', keywords: 'has-patch, needs-testing', milestone: '7.0' },
     { id: 63697, comment: 24, type: 'test-report', component: 'Performance', title: 'Optimize CSS loading in admin', focuses: 'performance', keywords: 'has-patch', milestone: '' },
+
+    // Posts, Post Types
+    { id: 63091, type: 'participation', component: 'Posts, Post Types', title: 'Dashboard collapsing published posts count with alt-press', focuses: '', keywords: 'commit', milestone: '7.0' },
+
+    // Upload/Media
+    { id: 29798, type: 'participation', component: 'Upload/Media', title: 'Unified theme and plugin uploader', focuses: '', keywords: 'feature-request', milestone: '' },
 ];
 
 // Date helpers
