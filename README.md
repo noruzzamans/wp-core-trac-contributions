@@ -6,8 +6,7 @@ Personal tracking for WordPress Core Trac contributions.
 
 ### 📊 Contributions
 - 📝 [All Tickets](./contributed/tickets.md) - All my contributions
-- 🧪 [Test Reports](./contributed/test-reports.md) - Test report contributions
-- 🔧 [Patch Testing](./contributed/patch-testing.md) - Patch testing contributions
+- 🧪 [Test Reports & Patch Testing](./contributed/test-reports.md) - Testing contributions
 - ✅ [Props Received](./contributed/with-props.md) - Tickets with props
 - ⏳ [No Props Yet](./contributed/without-props.md) - Waiting for props
 
@@ -42,7 +41,7 @@ Personal tracking for WordPress Core Trac contributions.
 | Type | Count |
 |:-------|------:|
 | [🧪 Test Reports](./contributed/test-reports.md) | 4 |
-| [🔧 Patch Testing](./contributed/patch-testing.md) | 2 |
+| [🔧 Patch Testing](./contributed/test-reports.md) | 2 |
 | 💬 Other | 5 |
 
 </td>

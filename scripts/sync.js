@@ -16,17 +16,17 @@ const README_FILE = path.join(ROOT_DIR, 'README.md');
 // Known ticket contributions (manually tracked + auto-discovered)
 // This serves as a base - the script will also search for new ones
 const KNOWN_TICKETS = [
-    { id: 62982, comment: 6, type: 'test-report', component: 'Accessibility', title: 'Screen Reader elements lack text to describe their general function' },
-    { id: 64065, comment: 6, type: 'patch-testing', component: 'Accessibility', title: 'Accessibility: Add screen reader text for icon-only buttons' },
-    { id: 63557, comment: 2, type: 'metadata', component: 'Accessibility', title: 'Add focus styles for skip links' },
-    { id: 64211, comment: 10, type: 'test-report', component: 'Bundled Themes', props: true, changeset: 61309, isMerged: true, title: 'Twenty Eleven: Improve PHP DocBlock compliance' },
-    { id: 63935, comment: 2, type: 'reproduction', component: 'Block Editor', title: 'Paragraph margins not honored in the backend with global styles' },
-    { id: 43084, comment: 9, type: 'patch-testing', component: 'Block Editor', title: 'Media Library: Custom Taxonomy Bulk Edit support' },
-    { id: 62028, type: 'participation', component: 'Block Editor', title: 'Paragraph margins not honored in the backend when global styles set' },
-    { id: 64262, type: 'participation', component: 'Coding Standards', title: 'Docblock improvements for 7.0' },
-    { id: 29798, type: 'participation', component: 'Upload/Media', title: 'Uploading large files causes time-outs or infinite loading' },
-    { id: 64354, comment: 24, type: 'test-report', component: 'Performance', title: 'OPCache: Preloading WordPress PHP files' },
-    { id: 63697, comment: 24, type: 'test-report', component: 'Performance', title: 'Optimize CSS loading in admin' },
+    { id: 62982, comment: 6, type: 'test-report', component: 'Accessibility', title: 'Screen Reader elements lack text to describe their general function', focuses: 'accessibility', keywords: 'has-patch', milestone: '' },
+    { id: 64065, comment: 6, type: 'patch-testing', component: 'Accessibility', title: 'Accessibility: Add screen reader text for icon-only buttons', focuses: 'accessibility', keywords: 'has-patch, needs-testing', milestone: '7.0' },
+    { id: 63557, comment: 2, type: 'metadata', component: 'Accessibility', title: 'Add focus styles for skip links', focuses: 'accessibility', keywords: '', milestone: '' },
+    { id: 64211, comment: 10, type: 'test-report', component: 'Bundled Themes', props: true, changeset: 61309, isMerged: true, title: 'Twenty Eleven: Improve PHP DocBlock compliance', focuses: 'coding-standards', keywords: 'has-patch', milestone: '6.8' },
+    { id: 63935, comment: 2, type: 'reproduction', component: 'Block Editor', title: 'Paragraph margins not honored in the backend with global styles', focuses: '', keywords: '', milestone: '' },
+    { id: 43084, comment: 9, type: 'patch-testing', component: 'Block Editor', title: 'Media Library: Custom Taxonomy Bulk Edit support', focuses: '', keywords: 'has-patch', milestone: '' },
+    { id: 62028, type: 'participation', component: 'Block Editor', title: 'Paragraph margins not honored in the backend when global styles set', focuses: '', keywords: '', milestone: '' },
+    { id: 64262, type: 'participation', component: 'Coding Standards', title: 'Docblock improvements for 7.0', focuses: 'coding-standards', keywords: '', milestone: '7.0' },
+    { id: 29798, type: 'participation', component: 'Upload/Media', title: 'Uploading large files causes time-outs or infinite loading', focuses: '', keywords: '', milestone: '' },
+    { id: 64354, comment: 24, type: 'test-report', component: 'Performance', title: 'OPCache: Preloading WordPress PHP files', focuses: 'performance', keywords: 'has-patch, needs-testing', milestone: '7.0' },
+    { id: 63697, comment: 24, type: 'test-report', component: 'Performance', title: 'Optimize CSS loading in admin', focuses: 'performance', keywords: 'has-patch', milestone: '' },
 ];
 
 // Date helpers
@@ -59,6 +59,10 @@ async function fetchTicketDetails(ticketId) {
         const component = $('td[headers="h_component"]').text().trim() || 'General';
         const milestone = $('td[headers="h_milestone"]').text().trim() || '';
 
+        // Extract Focuses and Keywords
+        const focuses = $('td[headers="h_focuses"]').text().trim() || '';
+        const keywords = $('td[headers="h_keywords"]').text().trim() || '';
+
         // Check if merged (has a changeset)
         const isMerged = resolution.includes('fixed') || status === 'closed';
         let changesetId = null;
@@ -77,6 +81,8 @@ async function fetchTicketDetails(ticketId) {
             resolution,
             component,
             milestone,
+            focuses,
+            keywords,
             isMerged,
             changesetId,
             mergedDate,
@@ -177,7 +183,11 @@ async function processAllTickets() {
                     ? details.title
                     : (config.title || `Ticket #${config.id}`),
                 // Use config isMerged as fallback
-                isMerged: details.isMerged || config.isMerged || false
+                isMerged: details.isMerged || config.isMerged || false,
+                // Focuses, Keywords, Milestone with fallbacks
+                focuses: details.focuses || config.focuses || '',
+                keywords: details.keywords || config.keywords || '',
+                milestone: details.milestone || config.milestone || ''
             };
 
             // Check props if we have a changeset
@@ -242,6 +252,12 @@ function generateContributedTickets(tickets) {
             if (ticket.milestone) {
                 content += `  - **Milestone**: ${ticket.milestone}\n`;
             }
+            if (ticket.focuses) {
+                content += `  - **Focuses**: ${ticket.focuses}\n`;
+            }
+            if (ticket.keywords) {
+                content += `  - **Keywords**: ${ticket.keywords}\n`;
+            }
             content += `\n`;
         }
     }
@@ -263,36 +279,64 @@ function generateContributedTickets(tickets) {
     return content;
 }
 
-// Generate contributed/test-reports.md
+// Generate contributed/test-reports.md (includes patch testing)
 function generateTestReports(tickets) {
     const testReports = tickets.filter(t => t.type === 'test-report');
+    const patchTests = tickets.filter(t => t.type === 'patch-testing');
+    const allTests = [...testReports, ...patchTests];
 
-    let content = `# Test Reports
+    let content = `# Test Reports & Patch Testing
 
-Test reports I submitted on Trac tickets.
+All testing contributions - test reports and patch testing.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
 <!-- Last synced: ${new Date().toISOString()} -->
 
 `;
 
-    if (testReports.length === 0) {
-        content += `*No test reports yet*\n\n`;
+    if (allTests.length === 0) {
+        content += `*No test contributions yet*\n\n`;
     } else {
-        for (const ticket of testReports) {
-            const propsIcon = ticket.hasProps ? '✅' : '⏳';
-            const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
-            content += `- ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink}) - ${ticket.title}\n`;
-            content += `  - **Component**: ${ticket.component}\n`;
-            if (ticket.milestone) content += `  - **Milestone**: ${ticket.milestone}\n`;
-            content += `\n`;
+        // Test Reports section
+        if (testReports.length > 0) {
+            content += `## 🧪 Test Reports\n\n`;
+            for (const ticket of testReports) {
+                const propsIcon = ticket.hasProps ? '✅' : '⏳';
+                const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
+                content += `- ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink}) - ${ticket.title}\n`;
+                content += `  - **Component**: ${ticket.component}\n`;
+                if (ticket.milestone) content += `  - **Milestone**: ${ticket.milestone}\n`;
+                if (ticket.focuses) content += `  - **Focuses**: ${ticket.focuses}\n`;
+                if (ticket.keywords) content += `  - **Keywords**: ${ticket.keywords}\n`;
+                content += `\n`;
+            }
+        }
+
+        // Patch Testing section
+        if (patchTests.length > 0) {
+            content += `## 🔧 Patch Testing\n\n`;
+            for (const ticket of patchTests) {
+                const propsIcon = ticket.hasProps ? '✅' : '⏳';
+                const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
+                content += `- ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink}) - ${ticket.title}\n`;
+                content += `  - **Component**: ${ticket.component}\n`;
+                if (ticket.milestone) content += `  - **Milestone**: ${ticket.milestone}\n`;
+                if (ticket.focuses) content += `  - **Focuses**: ${ticket.focuses}\n`;
+                if (ticket.keywords) content += `  - **Keywords**: ${ticket.keywords}\n`;
+                content += `\n`;
+            }
         }
     }
 
     content += `<!-- AUTO-SYNC END -->
 
 ---
-**Total Test Reports**: ${testReports.length}
+## Summary
+| Type | Count |
+|------|-------|
+| 🧪 Test Reports | ${testReports.length} |
+| 🔧 Patch Testing | ${patchTests.length} |
+| **Total** | **${allTests.length}** |
 `;
 
     return content;
@@ -505,8 +549,7 @@ Personal tracking for WordPress Core Trac contributions.
 
 ### 📊 Contributions
 - 📝 [All Tickets](./contributed/tickets.md) - All my contributions
-- 🧪 [Test Reports](./contributed/test-reports.md) - Test report contributions
-- 🔧 [Patch Testing](./contributed/patch-testing.md) - Patch testing contributions
+- 🧪 [Test Reports & Patch Testing](./contributed/test-reports.md) - Testing contributions
 - ✅ [Props Received](./contributed/with-props.md) - Tickets with props
 - ⏳ [No Props Yet](./contributed/without-props.md) - Waiting for props
 
@@ -541,7 +584,7 @@ Personal tracking for WordPress Core Trac contributions.
 | Type | Count |
 |:-------|------:|
 | [🧪 Test Reports](./contributed/test-reports.md) | ${testReports} |
-| [🔧 Patch Testing](./contributed/patch-testing.md) | ${patchTesting} |
+| [🔧 Patch Testing](./contributed/test-reports.md) | ${patchTesting} |
 | 💬 Other | ${total - testReports - patchTesting} |
 
 </td>
@@ -594,12 +637,6 @@ async function main() {
         generateTestReports(tickets)
     );
     console.log('   ✅ contributed/test-reports.md');
-
-    fs.writeFileSync(
-        path.join(CONTRIBUTED_DIR, 'patch-testing.md'),
-        generatePatchTesting(tickets)
-    );
-    console.log('   ✅ contributed/patch-testing.md');
 
     fs.writeFileSync(
         path.join(CONTRIBUTED_DIR, 'with-props.md'),
