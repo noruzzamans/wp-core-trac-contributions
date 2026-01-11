@@ -13,15 +13,6 @@ Personal tracking for my WordPress Core Trac contributions.
 | ✅ [Props Received](./contributed/with-props.md) | [2026 Goals](./next-targets/2026-goals.md) |
 | ⏳ [No Props Yet](./contributed/without-props.md) | 👤 [About Me](./about-me.md) |
 
-### 🔍 My Focus Areas
-| Focus | Tickets | Focus | Tickets |
-|:------|:--------|:------|:--------|
-| 🎨 **css** | 4 | 🎨 **ui** | 4 |
-| ♿ **accessibility** | 3 | ⚡ **performance** | 2 |
-| 📚 **docs** | 2 | 🛠️ **administration** | 2 |
-| 📝 **coding-standards** | 1 | 🧪 **tests** | 1 |
-
-
 ## 📈 Stats
 
 <table width="100%">

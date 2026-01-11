@@ -662,50 +662,6 @@ function updateReadme(tickets) {
     const propsRate = merged > 0 ? Math.round((withProps / merged) * 100) : 0;
     const release70 = tickets.filter(t => t.milestone && t.milestone.includes('7.0')).length;
 
-    // Count tickets by focus area
-    const focusCounts = {};
-    tickets.forEach(t => {
-        if (t.focuses) {
-            const focuses = t.focuses.split(',').map(f => f.trim().toLowerCase());
-            focuses.forEach(f => {
-                focusCounts[f] = (focusCounts[f] || 0) + 1;
-            });
-        }
-    });
-
-    // Sort focuses by count
-    const sortedFocuses = Object.entries(focusCounts)
-        .sort((a, b) => b[1] - a[1]);
-
-    // Generate focus table with counts (2 columns)
-    let focusTable = '';
-    const focusIcons = {
-        'ui': '🎨', 'accessibility': '♿', 'performance': '⚡', 'css': '🎨',
-        'docs': '📚', 'administration': '🛠️', 'tests': '🧪', 'coding-standards': '📝'
-    };
-
-    if (sortedFocuses.length > 0) {
-        focusTable = `| Focus | Tickets | Focus | Tickets |\n|:------|:--------|:------|:--------|\n`;
-
-        // Create pairs for 2-column layout
-        for (let i = 0; i < sortedFocuses.length; i += 2) {
-            const [focus1, count1] = sortedFocuses[i];
-            const icon1 = focusIcons[focus1] || '📌';
-            const cell1 = `${icon1} **${focus1}** | ${count1}`;
-
-            let cell2 = ' | ';
-            if (i + 1 < sortedFocuses.length) {
-                const [focus2, count2] = sortedFocuses[i + 1];
-                const icon2 = focusIcons[focus2] || '📌';
-                cell2 = `${icon2} **${focus2}** | ${count2}`;
-            }
-
-            focusTable += `| ${cell1} | ${cell2} |\n`;
-        }
-    } else {
-        focusTable = '*No focus areas tracked yet*\n';
-    }
-
     const content = `# WordPress Core Trac Contributions
 
 Personal tracking for my WordPress Core Trac contributions.
@@ -720,9 +676,6 @@ Personal tracking for my WordPress Core Trac contributions.
 | 🧪 [Test Reports](./contributed/test-reports.md) | 🎉 [Merged Tickets](./merged/tickets.md) |
 | ✅ [Props Received](./contributed/with-props.md) | [2026 Goals](./next-targets/2026-goals.md) |
 | ⏳ [No Props Yet](./contributed/without-props.md) | 👤 [About Me](./about-me.md) |
-
-### 🔍 My Focus Areas
-${focusTable}
 
 ## 📈 Stats
 
