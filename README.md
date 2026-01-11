@@ -45,9 +45,9 @@ Personal tracking for my WordPress Core Trac contributions.
 
 | Type | Count |
 |:-------|------:|
-| [🧪 Test Reports](./contributed/test-reports.md) | 0 |
+| [🧪 Test Reports](./contributed/test-reports.md) | 9 |
 | 📝 Patches | 0 |
-| 💬 Comments | 11 |
+| 💬 Comments | 2 |
 
 </td>
 <td width="33.34%" valign="top">

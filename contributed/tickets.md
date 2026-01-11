@@ -13,40 +13,44 @@ Total **11** tickets where I participated.
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ✅ Received |
 | Status | closed ((fixed)) |
 | Milestone | 7.0 |
+| My Comments | 1 |
 
 ### 🔓 [#63935](https://core.trac.wordpress.org/ticket/63935)
 **Grid block background causes inconsistent padding on frontend**
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | Awaiting Review |
+| My Comments | 1 |
 
 ### 🔓 [#63557](https://core.trac.wordpress.org/ticket/63557)
 **List Block Indentation Issue in Twenty Fifteen & Twenty Sixteen Themes**
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | Awaiting Review |
+| My Comments | 1 |
 
 ### 🔓 [#62982](https://core.trac.wordpress.org/ticket/62982)
 **Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations**
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | 7.0 |
+| My Comments | 1 |
 
 ## Editor
 
@@ -58,6 +62,7 @@ Total **11** tickets where I participated.
 | Contribution | 💬 Comment |
 | Props | ⏳ Pending |
 | Status | closed ((invalid)) |
+| My Comments | 1 |
 
 ## General
 
@@ -66,30 +71,33 @@ Total **11** tickets where I participated.
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 👀 Code Review |
 | Props | ❌ Not Given |
 | Status | closed ((fixed)) |
 | Milestone | 7.0 |
+| My Comments | 1 |
 
 ### 🔓 [#64065](https://core.trac.wordpress.org/ticket/64065)
 **Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.**
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | 7.0 |
+| My Comments | 1 |
 
 ### 🔓 [#29798](https://core.trac.wordpress.org/ticket/29798)
 **unified theme and plugin uploader**
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | Future Release |
+| My Comments | 1 |
 
 ## Posts, Post Types
 
@@ -98,10 +106,11 @@ Total **11** tickets where I participated.
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | accepted |
 | Milestone | 7.0 |
+| My Comments | 1 |
 
 ## Script Loader
 
@@ -110,10 +119,11 @@ Total **11** tickets where I participated.
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | accepted |
 | Milestone | 6.9.1 |
+| My Comments | 1 |
 
 ## Site Health
 
@@ -122,10 +132,11 @@ Total **11** tickets where I participated.
 
 | Field | Value |
 |-------|-------|
-| Contribution | 💬 Comment |
+| Contribution | 🧪 Test Report |
 | Props | ⏳ Pending |
 | Status | reviewing |
 | Milestone | 7.0 |
+| My Comments | 1 |
 
 ---
 ## 📊 Summary
@@ -135,5 +146,5 @@ Total **11** tickets where I participated.
 | 📝 Total Tickets | 11 |
 | ✅ Props Received | 1 |
 | 🔒 Merged/Fixed | 2 |
-| 🧪 Test Reports | 0 |
+| 🧪 Test Reports | 9 |
 | 📝 Patches | 0 |

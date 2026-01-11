@@ -121,44 +121,65 @@ async function fetchTicketDetails(ticketId) {
         let contributionType = 'comment';
         let commentCount = 0;
         let firstCommentDate = null;
+        let allCommentText = '';
 
+        // Check each change/comment section
         $('div.change').each((i, el) => {
             const $change = $(el);
-            const author = $change.find('h3.change a.author').text().trim();
+            const changeHtml = $change.html() || '';
 
-            if (author.toLowerCase() === USERNAME.toLowerCase()) {
+            // Check if this change was made by the user (check HTML for username)
+            if (changeHtml.toLowerCase().includes(`>${USERNAME.toLowerCase()}<`) ||
+                changeHtml.toLowerCase().includes(`"${USERNAME.toLowerCase()}"`) ||
+                changeHtml.toLowerCase().includes(`/${USERNAME.toLowerCase()}`)) {
+
                 commentCount++;
-                const commentText = $change.find('div.comment').text().trim().toLowerCase();
-                const dateLink = $change.find('h3.change a.timeline');
-
-                if (!firstCommentDate && dateLink.length) {
-                    firstCommentDate = dateLink.attr('title') || dateLink.text();
-                }
-
-                // Determine contribution type from comment content
-                if (commentText.includes('tested') ||
-                    commentText.includes('testing') ||
-                    commentText.includes('test report') ||
-                    commentText.includes('confirmed') ||
-                    commentText.includes('can confirm') ||
-                    commentText.includes('verified') ||
-                    commentText.includes('works as expected') ||
-                    commentText.includes('reproduced') ||
-                    commentText.includes('result:') ||
-                    commentText.includes('i tested')) {
-                    contributionType = 'test-report';
-                } else if (commentText.includes('patch') ||
-                    commentText.includes('uploaded') ||
-                    commentText.includes('diff') ||
-                    commentText.includes('attached')) {
-                    contributionType = 'patch';
-                } else if (commentText.includes('review') ||
-                    commentText.includes('lgtm') ||
-                    commentText.includes('code looks')) {
-                    contributionType = 'code-review';
-                }
+                // Get comment text from the comment div
+                const commentEl = $change.find('.comment');
+                const commentText = commentEl.text().trim();
+                allCommentText += ' ' + commentText;
             }
         });
+
+        // If no comments found via change divs, check full page for user's comments
+        if (commentCount === 0) {
+            // Fallback: search entire page HTML for structured test report
+            const pageHtml = $.html().toLowerCase();
+            if (pageHtml.includes(USERNAME.toLowerCase())) {
+                // Check if user commented with test report format
+                if (pageHtml.includes('test report') &&
+                    pageHtml.includes('environment') &&
+                    pageHtml.includes('actual results')) {
+                    contributionType = 'test-report';
+                    commentCount = 1;
+                }
+            }
+        }
+
+        // Determine contribution type from all comments
+        const lowerText = allCommentText.toLowerCase();
+
+        // Test Report detection - check for structured test report format
+        if (lowerText.includes('test report') ||
+            lowerText.includes('patch tested') ||
+            lowerText.includes('actual results') ||
+            lowerText.includes('environment') && lowerText.includes('wordpress:') ||
+            lowerText.includes('tested') && lowerText.includes('result') ||
+            lowerText.includes('i tested') ||
+            lowerText.includes('can confirm') ||
+            lowerText.includes('confirmed the') ||
+            lowerText.includes('verified') ||
+            lowerText.includes('works as expected')) {
+            contributionType = 'test-report';
+        } else if (lowerText.includes('attached') && lowerText.includes('patch') ||
+            lowerText.includes('uploaded') ||
+            lowerText.includes('.diff')) {
+            contributionType = 'patch';
+        } else if (lowerText.includes('lgtm') ||
+            lowerText.includes('code looks good') ||
+            lowerText.includes('reviewed')) {
+            contributionType = 'code-review';
+        }
 
         // Check if closed/merged
         const isClosed = status === 'closed';

@@ -11,7 +11,7 @@ My contributions targeting the WordPress 7.0 release.
 
 | Field | Value |
 |-------|-------|
-| Type | 💬 Comment |
+| Type | 🧪 Test Report |
 | Status | closed |
 | Focuses | docs |
 | Keywords | has-patch |
@@ -22,7 +22,7 @@ My contributions targeting the WordPress 7.0 release.
 
 | Field | Value |
 |-------|-------|
-| Type | 💬 Comment |
+| Type | 🧪 Test Report |
 | Status | new |
 | Focuses | accessibility |
 | Keywords | needs-design-feedback has-patch |
@@ -35,7 +35,7 @@ My contributions targeting the WordPress 7.0 release.
 
 | Field | Value |
 |-------|-------|
-| Type | 💬 Comment |
+| Type | 👀 Code Review |
 | Status | closed |
 | Focuses | docs, coding-standards |
 | Keywords | has-patch |
@@ -46,7 +46,7 @@ My contributions targeting the WordPress 7.0 release.
 
 | Field | Value |
 |-------|-------|
-| Type | 💬 Comment |
+| Type | 🧪 Test Report |
 | Status | new |
 | Focuses | ui, accessibility, css |
 | Keywords | has-patch has-test-info |
@@ -59,7 +59,7 @@ My contributions targeting the WordPress 7.0 release.
 
 | Field | Value |
 |-------|-------|
-| Type | 💬 Comment |
+| Type | 🧪 Test Report |
 | Status | accepted |
 | Focuses | ui, accessibility, administration |
 | Keywords | has-screenshots has-patch has-test-info commit |
@@ -72,7 +72,7 @@ My contributions targeting the WordPress 7.0 release.
 
 | Field | Value |
 |-------|-------|
-| Type | 💬 Comment |
+| Type | 🧪 Test Report |
 | Status | reviewing |
 | Focuses | performance |
 | Keywords | has-patch needs-testing |
