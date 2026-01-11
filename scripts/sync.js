@@ -265,7 +265,7 @@ function generateContributedTickets(tickets) {
     let content = `# My Contributed Tickets (2025-2026)
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: ${new Date().toISOString()} -->
+<!-- Last synced: Automated -->
 
 `;
 
@@ -320,7 +320,7 @@ function generateTestReports(tickets) {
 All testing contributions - test reports and patch testing.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: ${new Date().toISOString()} -->
+<!-- Last synced: Automated -->
 
 `;
 
@@ -381,7 +381,7 @@ function generatePatchTesting(tickets) {
 Patches I tested on Trac tickets.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: ${new Date().toISOString()} -->
+<!-- Last synced: Automated -->
 
 `;
 
@@ -415,7 +415,7 @@ function generateWithProps(tickets) {
 Tickets where I received props in the changeset.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: ${new Date().toISOString()} -->
+<!-- Last synced: Automated -->
 
 `;
 
@@ -452,7 +452,7 @@ function generateWithoutProps(tickets) {
 Tickets where I contributed but haven't received props yet.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: ${new Date().toISOString()} -->
+<!-- Last synced: Automated -->
 
 `;
 
@@ -513,7 +513,7 @@ function generateMergedTickets(tickets) {
 Tickets merged into WordPress Core where I received props.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: ${new Date().toISOString()} -->
+<!-- Last synced: Automated -->
 
 `;
 
@@ -557,7 +557,7 @@ function generate7ReleaseTickets(tickets) {
 My contributions targeting WordPress 7.0 release.
 
 <!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: ${new Date().toISOString()} -->
+<!-- Last synced: Automated -->
 
 `;
 
@@ -699,7 +699,7 @@ Personal tracking for WordPress Core Trac contributions.
 </table>
 
 ---
-**Last Synced**: ${today}
+**Last Synced**: Automated
 `;
 
     return content;
@@ -773,3 +773,4 @@ async function main() {
 }
 
 main().catch(console.error);
+
