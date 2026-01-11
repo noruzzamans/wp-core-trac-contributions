@@ -12,11 +12,19 @@ Personal tracking for my WordPress Core Trac contributions.
 - ✅ [Props Received](./contributed/with-props.md) - Credits received
 - ⏳ [No Props Yet](./contributed/without-props.md) - Pending/missed props
 
+### 🎯 By Milestone
+- 🚀 [7.0 Release](./7.0-release/tickets.md) - **6** tickets for WP 7.0
+- 🔗 [Trac: 7.0 Milestone](https://core.trac.wordpress.org/query?milestone=7.0&comment=~noruzzaman)
+
+### � By Focus (Trac Links)
+- 🎨 [UI/UX](https://core.trac.wordpress.org/query?focuses=~ui&comment=~noruzzaman) - User Interface
+- ♿ [Accessibility](https://core.trac.wordpress.org/query?focuses=~accessibility&comment=~noruzzaman) - a11y
+- ⚡ [Performance](https://core.trac.wordpress.org/query?focuses=~performance&comment=~noruzzaman) - Speed
+- 🎨 [CSS](https://core.trac.wordpress.org/query?focuses=~css&comment=~noruzzaman) - Styling
+- 📚 [Docs](https://core.trac.wordpress.org/query?focuses=~docs&comment=~noruzzaman) - Documentation
+
 ### ✅ Merged
 - 🎉 [Merged Tickets](./merged/tickets.md) - Merged into WordPress Core
-
-### 🚀 7.0 Release
-- 🎯 [7.0 Release](./7.0-release/tickets.md) - **6** tickets for WP 7.0
 
 ### 🎯 Goals
 - [2026 Goals](./next-targets/2026-goals.md) - Contribution targets
