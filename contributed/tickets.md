@@ -17,6 +17,8 @@ Total **11** tickets where I participated.
 | Props | ✅ Received |
 | Status | closed ((fixed)) |
 | Milestone | 7.0 |
+| Focuses | docs |
+| Keywords | has-patch |
 | My Comments | 1 |
 
 ### 🔓 [#63935](https://core.trac.wordpress.org/ticket/63935)
@@ -28,6 +30,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | Awaiting Review |
+| Focuses | ui, css |
+| Keywords | needs-patch dev-feedback 2nd-opinion needs-testing |
 | My Comments | 1 |
 
 ### 🔓 [#63557](https://core.trac.wordpress.org/ticket/63557)
@@ -39,6 +43,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | Awaiting Review |
+| Focuses | ui, css, tests |
+| Keywords | dev-feedback |
 | My Comments | 1 |
 
 ### 🔓 [#62982](https://core.trac.wordpress.org/ticket/62982)
@@ -50,6 +56,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | 7.0 |
+| Focuses | accessibility |
+| Keywords | needs-design-feedback has-patch |
 | My Comments | 1 |
 
 ## Editor
@@ -62,6 +70,7 @@ Total **11** tickets where I participated.
 | Contribution | 💬 Comment |
 | Props | ⏳ Pending |
 | Status | closed ((invalid)) |
+| Keywords | has-test-info reporter-feedback |
 | My Comments | 1 |
 
 ## General
@@ -75,6 +84,8 @@ Total **11** tickets where I participated.
 | Props | ❌ Not Given |
 | Status | closed ((fixed)) |
 | Milestone | 7.0 |
+| Focuses | docs, coding-standards |
+| Keywords | has-patch |
 | My Comments | 1 |
 
 ### 🔓 [#64065](https://core.trac.wordpress.org/ticket/64065)
@@ -86,6 +97,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | 7.0 |
+| Focuses | ui, accessibility, css |
+| Keywords | has-patch has-test-info |
 | My Comments | 1 |
 
 ### 🔓 [#29798](https://core.trac.wordpress.org/ticket/29798)
@@ -97,6 +110,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | new |
 | Milestone | Future Release |
+| Focuses | administration |
+| Keywords | has-patch good-first-bug needs-testing |
 | My Comments | 1 |
 
 ## Posts, Post Types
@@ -110,6 +125,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | accepted |
 | Milestone | 7.0 |
+| Focuses | ui, accessibility, administration |
+| Keywords | has-screenshots has-patch has-test-info commit |
 | My Comments | 1 |
 
 ## Script Loader
@@ -123,6 +140,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | accepted |
 | Milestone | 6.9.1 |
+| Focuses | css, performance |
+| Keywords | has-patch has-unit-tests needs-testing |
 | My Comments | 1 |
 
 ## Site Health
@@ -136,6 +155,8 @@ Total **11** tickets where I participated.
 | Props | ⏳ Pending |
 | Status | reviewing |
 | Milestone | 7.0 |
+| Focuses | performance |
+| Keywords | has-patch needs-testing |
 | My Comments | 1 |
 
 ---

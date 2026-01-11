@@ -350,6 +350,8 @@ Total **${tickets.length}** tickets where I participated.
             content += `| Props | ${propsIcon} ${ticket.hasProps ? 'Received' : (ticket.isMerged ? 'Not Given' : 'Pending')} |\n`;
             content += `| Status | ${ticket.status}${ticket.resolution ? ` (${ticket.resolution})` : ''} |\n`;
             if (ticket.milestone) content += `| Milestone | ${ticket.milestone} |\n`;
+            if (ticket.focuses) content += `| Focuses | ${ticket.focuses} |\n`;
+            if (ticket.keywords) content += `| Keywords | ${ticket.keywords} |\n`;
             if (ticket.commentCount) content += `| My Comments | ${ticket.commentCount} |\n`;
             content += `\n`;
         }
