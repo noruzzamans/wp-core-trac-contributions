@@ -399,7 +399,12 @@ All tickets where I provided testing contributions.
             content += `## ✅ Props Received (${withProps.length})\n\n`;
             for (const t of withProps) {
                 content += `- ✅ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
-                content += `  - **Component**: ${t.component}${t.milestone ? ` | **Milestone**: ${t.milestone}` : ''}\n\n`;
+                content += `  - **Component**: ${t.component}`;
+                if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+                content += `\n`;
+                if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+                if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
+                content += `\n`;
             }
         }
 
@@ -407,7 +412,12 @@ All tickets where I provided testing contributions.
             content += `## ❌ Merged Without Props (${merged.length})\n\n`;
             for (const t of merged) {
                 content += `- ❌ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
-                content += `  - **Component**: ${t.component}${t.milestone ? ` | **Milestone**: ${t.milestone}` : ''}\n\n`;
+                content += `  - **Component**: ${t.component}`;
+                if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+                content += `\n`;
+                if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+                if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
+                content += `\n`;
             }
         }
 
@@ -415,7 +425,12 @@ All tickets where I provided testing contributions.
             content += `## ⏳ Pending (${pending.length})\n\n`;
             for (const t of pending) {
                 content += `- ⏳ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
-                content += `  - **Component**: ${t.component}${t.milestone ? ` | **Milestone**: ${t.milestone}` : ''} | **Status**: ${t.status}\n\n`;
+                content += `  - **Component**: ${t.component}`;
+                if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+                content += ` | **Status**: ${t.status}\n`;
+                if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+                if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
+                content += `\n`;
             }
         }
     }
