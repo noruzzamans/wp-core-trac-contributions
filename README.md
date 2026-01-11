@@ -6,12 +6,28 @@ Personal tracking for my WordPress Core Trac contributions.
 
 ## Quick Navigation
 
-| 📊 Contributions | 🎯 Milestone & Merged |
-|:-----------------|:----------------------|
-| 📝 [All Tickets](./contributed/tickets.md) | 🚀 [7.0 Release](./7.0-release/tickets.md) - **6** tickets |
-| 🧪 [Test Reports](./contributed/test-reports.md) | 🎉 [Merged Tickets](./merged/tickets.md) |
-| ✅ [Props Received](./contributed/with-props.md) | [2026 Goals](./next-targets/2026-goals.md) |
-| ⏳ [No Props Yet](./contributed/without-props.md) | 👤 [About Me](./about-me.md) |
+<table width="100%">
+<tr>
+<td width="50%" valign="top">
+
+### 📊 Contributions
+- 📝 [All Tickets](./contributed/tickets.md) - Every ticket I contributed to
+- 🧪 [Test Reports](./contributed/test-reports.md) - My testing contributions
+- ✅ [Props Received](./contributed/with-props.md) - Credits received
+- ⏳ [No Props Yet](./contributed/without-props.md) - Pending/missed props
+
+</td>
+<td width="50%" valign="top">
+
+### 🎯 Milestone & Merged
+- 🚀 [7.0 Release](./7.0-release/tickets.md) - **6** tickets for WP 7.0
+- 🎉 [Merged Tickets](./merged/tickets.md) - Merged into WordPress Core
+- [2026 Goals](./next-targets/2026-goals.md) - Contribution targets
+- 👤 [About Me](./about-me.md) - Profile & expertise
+
+</td>
+</tr>
+</table>
 
 ## 📈 Stats
 
