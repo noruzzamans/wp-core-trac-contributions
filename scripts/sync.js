@@ -415,7 +415,7 @@ All tickets where I provided testing contributions.
             content += `## ⏳ Pending (${pending.length})\n\n`;
             for (const t of pending) {
                 content += `- ⏳ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
-                content += `  - **Component**: ${t.component} | **Status**: ${t.status}\n\n`;
+                content += `  - **Component**: ${t.component}${t.milestone ? ` | **Milestone**: ${t.milestone}` : ''} | **Status**: ${t.status}\n\n`;
             }
         }
     }
