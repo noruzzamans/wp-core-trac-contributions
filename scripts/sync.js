@@ -686,7 +686,8 @@ function updateReadme(tickets) {
 
     sortedFocuses.forEach(([focus, count]) => {
         const icon = focusIcons[focus] || '📌';
-        focusList += `- ${icon} **${focus}**: ${count} ticket${count > 1 ? 's' : ''}\n`;
+        const tracLink = `https://core.trac.wordpress.org/query?focuses=~${focus}&comment=~${USERNAME}`;
+        focusList += `- ${icon} [**${focus}**](${tracLink}): ${count} ticket${count > 1 ? 's' : ''}\n`;
     });
 
     if (focusList === '') {
