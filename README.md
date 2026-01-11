@@ -16,14 +16,14 @@ Personal tracking for my WordPress Core Trac contributions.
 - 🚀 [7.0 Release](./7.0-release/tickets.md) - **6** tickets for WP 7.0
 
 ### 🔍 My Focus Areas
-- 🎨 [**css**](https://core.trac.wordpress.org/query?focuses=~css&comment=~noruzzaman): 4 tickets
-- 🎨 [**ui**](https://core.trac.wordpress.org/query?focuses=~ui&comment=~noruzzaman): 4 tickets
-- ♿ [**accessibility**](https://core.trac.wordpress.org/query?focuses=~accessibility&comment=~noruzzaman): 3 tickets
-- ⚡ [**performance**](https://core.trac.wordpress.org/query?focuses=~performance&comment=~noruzzaman): 2 tickets
-- 📚 [**docs**](https://core.trac.wordpress.org/query?focuses=~docs&comment=~noruzzaman): 2 tickets
-- 🛠️ [**administration**](https://core.trac.wordpress.org/query?focuses=~administration&comment=~noruzzaman): 2 tickets
-- 📝 [**coding-standards**](https://core.trac.wordpress.org/query?focuses=~coding-standards&comment=~noruzzaman): 1 ticket
-- 🧪 [**tests**](https://core.trac.wordpress.org/query?focuses=~tests&comment=~noruzzaman): 1 ticket
+- 🎨 **css**: 4 tickets
+- 🎨 **ui**: 4 tickets
+- ♿ **accessibility**: 3 tickets
+- ⚡ **performance**: 2 tickets
+- 📚 **docs**: 2 tickets
+- 🛠️ **administration**: 2 tickets
+- 📝 **coding-standards**: 1 ticket
+- 🧪 **tests**: 1 ticket
 
 ### ✅ Merged
 - 🎉 [Merged Tickets](./merged/tickets.md) - Merged into WordPress Core
