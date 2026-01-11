@@ -7,6 +7,10 @@ const path = require('path');
 const USERNAME = process.env.TRAC_USERNAME || 'noruzzaman';
 const TRAC_BASE_URL = 'https://core.trac.wordpress.org';
 
+// IMPORTANT: This URL shows ONLY tickets where user actually participated
+// NOT tickets where others mentioned the user's name
+const MY_COMMENTS_URL = `${TRAC_BASE_URL}/my-comments/all?USER=${USERNAME}&max=200`;
+
 // Paths
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTRIBUTED_DIR = path.join(ROOT_DIR, 'contributed');
@@ -23,17 +27,15 @@ const formatDate = (dateStr) => {
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 };
 
-// Auto-discover ALL tickets user commented on
-async function fetchUserTicketsFromTrac() {
-    console.log(`🔍 Fetching ALL tickets for user: ${USERNAME}...`);
+// Fetch ONLY tickets where user actually participated (commented)
+async function fetchMyParticipatedTickets() {
+    console.log(`🔍 Fetching tickets where ${USERNAME} ACTUALLY participated...`);
+    console.log(`   URL: ${MY_COMMENTS_URL}`);
 
     const allTickets = [];
 
-    // Fetch tickets where user commented (up to 200)
-    const queryUrl = `${TRAC_BASE_URL}/query?comment=~${USERNAME}&col=id&col=summary&col=component&col=status&col=type&col=milestone&order=changetime&desc=1&max=200`;
-
     try {
-        const response = await fetch(queryUrl, {
+        const response = await fetch(MY_COMMENTS_URL, {
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
@@ -44,26 +46,32 @@ async function fetchUserTicketsFromTrac() {
         const html = await response.text();
         const $ = cheerio.load(html);
 
-        // Parse the query result table
-        $('table.tickets tbody tr').each((i, row) => {
+        // Extract title to verify count
+        const title = $('title').text();
+        console.log(`   Page title: ${title}`);
+
+        // Parse the ticket table - my-comments page uses class "listing"
+        $('table.listing tr').each((i, row) => {
+            if (i === 0) return; // Skip header row
+
             const $row = $(row);
-            const idLink = $row.find('td.id a');
+            const ticketLink = $row.find('td.ticket a');
             const summaryLink = $row.find('td.summary a');
             const component = $row.find('td.component').text().trim();
-            const status = $row.find('td.status').text().trim();
-            const type = $row.find('td.type').text().trim();
             const milestone = $row.find('td.milestone').text().trim();
+            const type = $row.find('td.type').text().trim();
 
-            if (idLink.length) {
-                const href = idLink.attr('href');
-                const id = parseInt(href.split('/').pop().split('#')[0]);
+            if (ticketLink.length) {
+                const href = ticketLink.attr('href');
+                const match = href.match(/\/ticket\/(\d+)/);
 
-                if (id && !isNaN(id)) {
+                if (match) {
+                    const id = parseInt(match[1]);
                     allTickets.push({
                         id,
                         title: summaryLink.text().trim() || `Ticket #${id}`,
                         component: component || 'General',
-                        status: status || 'unknown',
+                        status: 'open',
                         type: type || 'defect',
                         milestone: milestone || ''
                     });
@@ -71,7 +79,7 @@ async function fetchUserTicketsFromTrac() {
             }
         });
 
-        console.log(`   Found ${allTickets.length} tickets from Trac query`);
+        console.log(`   ✅ Found ${allTickets.length} tickets where I participated`);
     } catch (error) {
         console.error('   ❌ Query failed:', error.message);
     }
@@ -79,7 +87,7 @@ async function fetchUserTicketsFromTrac() {
     return allTickets;
 }
 
-// Fetch detailed ticket info including user's actual comments
+// Fetch detailed ticket info
 async function fetchTicketDetails(ticketId) {
     try {
         const url = `${TRAC_BASE_URL}/ticket/${ticketId}`;
@@ -109,56 +117,59 @@ async function fetchTicketDetails(ticketId) {
         // Check if user is the reporter
         const isReporter = reporter.toLowerCase() === USERNAME.toLowerCase();
 
-        // Find ALL user's comments
-        const userComments = [];
+        // Find user's comments and determine contribution type
+        let contributionType = 'comment';
+        let commentCount = 0;
+        let firstCommentDate = null;
+
         $('div.change').each((i, el) => {
             const $change = $(el);
             const author = $change.find('h3.change a.author').text().trim();
 
             if (author.toLowerCase() === USERNAME.toLowerCase()) {
-                const commentText = $change.find('div.comment').text().trim();
-                const commentDate = $change.find('h3.change a.timeline').attr('title') || '';
+                commentCount++;
+                const commentText = $change.find('div.comment').text().trim().toLowerCase();
+                const dateLink = $change.find('h3.change a.timeline');
 
-                userComments.push({
-                    text: commentText,
-                    date: commentDate
-                });
+                if (!firstCommentDate && dateLink.length) {
+                    firstCommentDate = dateLink.attr('title') || dateLink.text();
+                }
+
+                // Determine contribution type from comment content
+                if (commentText.includes('tested') ||
+                    commentText.includes('testing') ||
+                    commentText.includes('test report') ||
+                    commentText.includes('confirmed') ||
+                    commentText.includes('can confirm') ||
+                    commentText.includes('verified') ||
+                    commentText.includes('works as expected') ||
+                    commentText.includes('reproduced') ||
+                    commentText.includes('result:') ||
+                    commentText.includes('i tested')) {
+                    contributionType = 'test-report';
+                } else if (commentText.includes('patch') ||
+                    commentText.includes('uploaded') ||
+                    commentText.includes('diff') ||
+                    commentText.includes('attached')) {
+                    contributionType = 'patch';
+                } else if (commentText.includes('review') ||
+                    commentText.includes('lgtm') ||
+                    commentText.includes('code looks')) {
+                    contributionType = 'code-review';
+                }
             }
         });
-
-        // Determine contribution type from comments
-        let contributionType = 'comment';
-        const allCommentText = userComments.map(c => c.text).join(' ').toLowerCase();
-
-        if (allCommentText.includes('tested') ||
-            allCommentText.includes('testing') ||
-            allCommentText.includes('test report') ||
-            allCommentText.includes('confirmed') ||
-            allCommentText.includes('can confirm') ||
-            allCommentText.includes('verified') ||
-            allCommentText.includes('works as expected') ||
-            allCommentText.includes('reproduced')) {
-            contributionType = 'test-report';
-        } else if (allCommentText.includes('patch') ||
-            allCommentText.includes('applied') ||
-            allCommentText.includes('diff') ||
-            allCommentText.includes('fix uploaded')) {
-            contributionType = 'patch';
-        } else if (allCommentText.includes('review') ||
-            allCommentText.includes('code looks')) {
-            contributionType = 'code-review';
-        }
 
         // Check if closed/merged
         const isClosed = status === 'closed';
         const isFixed = resolution.toLowerCase().includes('fixed');
 
-        // Find changesets
+        // Find changesets and check for props
         const changesets = [];
         $('a[href*="/changeset/"]').each((i, el) => {
             const href = $(el).attr('href');
             const match = href.match(/changeset\/(\d+)/);
-            if (match) {
+            if (match && !changesets.includes(match[1])) {
                 changesets.push(match[1]);
             }
         });
@@ -167,7 +178,7 @@ async function fetchTicketDetails(ticketId) {
         let hasProps = false;
         let propsChangeset = null;
 
-        for (const changesetId of changesets.slice(0, 3)) { // Check first 3 changesets
+        for (const changesetId of changesets.slice(0, 5)) {
             try {
                 const csUrl = `${TRAC_BASE_URL}/changeset/${changesetId}`;
                 const csResponse = await fetch(csUrl, {
@@ -175,7 +186,11 @@ async function fetchTicketDetails(ticketId) {
                 });
                 const csHtml = await csResponse.text();
 
-                if (csHtml.toLowerCase().includes(USERNAME.toLowerCase())) {
+                // Check if username appears in props
+                if (csHtml.toLowerCase().includes(`props ${USERNAME.toLowerCase()}`) ||
+                    csHtml.toLowerCase().includes(`props to ${USERNAME.toLowerCase()}`) ||
+                    csHtml.toLowerCase().includes(`, ${USERNAME.toLowerCase()}`) ||
+                    csHtml.toLowerCase().includes(`${USERNAME.toLowerCase()},`)) {
                     hasProps = true;
                     propsChangeset = changesetId;
                     break;
@@ -197,8 +212,8 @@ async function fetchTicketDetails(ticketId) {
             reporter,
             isReporter,
             contributionType,
-            userComments,
-            commentCount: userComments.length,
+            commentCount,
+            firstCommentDate,
             isClosed,
             isFixed,
             isMerged: isClosed && isFixed,
@@ -215,10 +230,10 @@ async function fetchTicketDetails(ticketId) {
 
 // Process all tickets
 async function processAllTickets() {
-    console.log('📥 Processing all tickets...\n');
+    console.log('📥 Processing my participated tickets...\n');
 
-    // Fetch all tickets from Trac
-    const ticketList = await fetchUserTicketsFromTrac();
+    // Fetch ONLY tickets where I actually participated
+    const ticketList = await fetchMyParticipatedTickets();
 
     if (ticketList.length === 0) {
         console.log('   No tickets found!');
@@ -233,12 +248,11 @@ async function processAllTickets() {
         console.log(`   [${processed}/${ticketList.length}] Fetching #${basic.id}...`);
 
         // Small delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 300));
 
         const details = await fetchTicketDetails(basic.id);
 
         if (details) {
-            // Merge basic info with details
             tickets.push({
                 ...details,
                 component: details.component || basic.component,
@@ -251,10 +265,17 @@ async function processAllTickets() {
     // Sort by ID descending
     tickets.sort((a, b) => b.id - a.id);
 
+    // Count stats
+    const testReports = tickets.filter(t => t.contributionType === 'test-report').length;
+    const patches = tickets.filter(t => t.contributionType === 'patch').length;
+    const reviews = tickets.filter(t => t.contributionType === 'code-review').length;
+
     console.log(`\n✅ Processed ${tickets.length} tickets`);
     console.log(`   - With Props: ${tickets.filter(t => t.hasProps).length}`);
     console.log(`   - Merged: ${tickets.filter(t => t.isMerged).length}`);
-    console.log(`   - Test Reports: ${tickets.filter(t => t.contributionType === 'test-report').length}`);
+    console.log(`   - Test Reports: ${testReports}`);
+    console.log(`   - Patches: ${patches}`);
+    console.log(`   - Code Reviews: ${reviews}`);
 
     return tickets;
 }
@@ -280,9 +301,11 @@ function generateContributedTickets(tickets) {
         byComponent[comp].push(ticket);
     }
 
-    let content = `# All My Trac Contributions
+    let content = `# My Trac Contributions
 
 Total **${tickets.length}** tickets where I participated.
+
+> 📋 Source: [My Trac Comments](${MY_COMMENTS_URL})
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
 
@@ -347,7 +370,6 @@ All tickets where I provided testing contributions.
     if (testReports.length === 0) {
         content += `*No test reports yet*\n\n`;
     } else {
-        // Group by props status
         const withProps = testReports.filter(t => t.hasProps);
         const merged = testReports.filter(t => t.isMerged && !t.hasProps);
         const pending = testReports.filter(t => !t.isMerged);
@@ -420,7 +442,6 @@ Tickets where I contributed and received props in the changeset.
 
 // Generate contributed/without-props.md
 function generateWithoutProps(tickets) {
-    // No props: either pending or merged without props
     const pending = tickets.filter(t => !t.hasProps && !t.isMerged);
     const mergedNoProps = tickets.filter(t => !t.hasProps && t.isMerged);
 
@@ -479,7 +500,6 @@ Tickets that have been merged/fixed in WordPress Core.
     if (merged.length === 0) {
         content += `*No merged tickets yet*\n\n`;
     } else {
-        // Split by props
         const withProps = merged.filter(t => t.hasProps);
         const withoutProps = merged.filter(t => !t.hasProps);
 
@@ -526,7 +546,6 @@ My contributions targeting the WordPress 7.0 release.
     if (releaseTickets.length === 0) {
         content += `*No 7.0 milestone tickets yet*\n\n`;
     } else {
-        // Group by component
         const byComponent = {};
         for (const t of releaseTickets) {
             const comp = t.component || 'General';
@@ -577,17 +596,19 @@ function updateReadme(tickets) {
     const testReports = tickets.filter(t => t.contributionType === 'test-report').length;
     const patches = tickets.filter(t => t.contributionType === 'patch').length;
     const pending = tickets.filter(t => !t.isMerged).length;
-    const propsRate = total > 0 ? Math.round((withProps / merged) * 100) || 0 : 0;
+    const propsRate = merged > 0 ? Math.round((withProps / merged) * 100) : 0;
     const release70 = tickets.filter(t => t.milestone && t.milestone.includes('7.0')).length;
 
     const content = `# WordPress Core Trac Contributions
 
 Personal tracking for my WordPress Core Trac contributions.
 
+> 📋 Source: [My Trac Comments](${MY_COMMENTS_URL})
+
 ## Quick Navigation
 
 ### 📊 Contributions
-- 📝 [All Tickets](./contributed/tickets.md) - Every ticket I'm involved in
+- 📝 [All Tickets](./contributed/tickets.md) - Every ticket I contributed to
 - 🧪 [Test Reports](./contributed/test-reports.md) - My testing contributions
 - ✅ [Props Received](./contributed/with-props.md) - Credits received
 - ⏳ [No Props Yet](./contributed/without-props.md) - Pending/missed props
@@ -650,6 +671,8 @@ Personal tracking for my WordPress Core Trac contributions.
 // Main sync function
 async function main() {
     console.log('🚀 Starting WordPress Core Trac sync...\n');
+    console.log(`👤 Username: ${USERNAME}`);
+    console.log(`📋 Source: ${MY_COMMENTS_URL}\n`);
 
     // Ensure directories exist
     [CONTRIBUTED_DIR, MERGED_DIR, RELEASE_DIR].forEach(dir => {
@@ -658,7 +681,7 @@ async function main() {
         }
     });
 
-    // Process all tickets
+    // Process tickets
     const tickets = await processAllTickets();
 
     if (tickets.length === 0) {
