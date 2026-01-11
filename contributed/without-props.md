@@ -9,38 +9,57 @@ Tickets where I contributed but haven't received props.
 These are still open - will get props once merged!
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - Outlined buttons now have grey background
-  - 🧪 Test Report | Script Loader | accepted
+  - **Type**: 🧪 Test Report | **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
+  - **Focuses**: css, performance
+  - **Keywords**: has-patch has-unit-tests needs-testing
 
 - ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065) - Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.
-  - 🧪 Test Report | General | new
+  - **Type**: 🧪 Test Report | **Component**: General | **Milestone**: 7.0 | **Status**: new
+  - **Focuses**: ui, accessibility, css
+  - **Keywords**: has-patch has-test-info
 
 - ⏳ [#63935](https://core.trac.wordpress.org/ticket/63935) - Grid block background causes inconsistent padding on frontend
-  - 🧪 Test Report | Bundled Theme | new
+  - **Type**: 🧪 Test Report | **Component**: Bundled Theme | **Milestone**: Awaiting Review | **Status**: new
+  - **Focuses**: ui, css
+  - **Keywords**: needs-patch dev-feedback 2nd-opinion needs-testing
 
 - ⏳ [#63697](https://core.trac.wordpress.org/ticket/63697) - Add OPCache to Site Health
-  - 🧪 Test Report | Site Health | reviewing
+  - **Type**: 🧪 Test Report | **Component**: Site Health | **Milestone**: 7.0 | **Status**: reviewing
+  - **Focuses**: performance
+  - **Keywords**: has-patch needs-testing
 
 - ⏳ [#63557](https://core.trac.wordpress.org/ticket/63557) - List Block Indentation Issue in Twenty Fifteen & Twenty Sixteen Themes
-  - 🧪 Test Report | Bundled Theme | new
+  - **Type**: 🧪 Test Report | **Component**: Bundled Theme | **Milestone**: Awaiting Review | **Status**: new
+  - **Focuses**: ui, css, tests
+  - **Keywords**: dev-feedback
 
 - ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
-  - 🧪 Test Report | Bundled Theme | new
+  - **Type**: 🧪 Test Report | **Component**: Bundled Theme | **Milestone**: 7.0 | **Status**: new
+  - **Focuses**: accessibility
+  - **Keywords**: needs-design-feedback has-patch
 
 - ⏳ [#62028](https://core.trac.wordpress.org/ticket/62028) - Paragraph margins not honored
-  - 💬 Comment | Editor | closed
+  - **Type**: 💬 Comment | **Component**: Editor | **Status**: closed
+  - **Keywords**: has-test-info reporter-feedback
 
 - ⏳ [#43084](https://core.trac.wordpress.org/ticket/43084) - dashboard confuses published posts count with all posts
-  - 🧪 Test Report | Posts, Post Types | accepted
+  - **Type**: 🧪 Test Report | **Component**: Posts, Post Types | **Milestone**: 7.0 | **Status**: accepted
+  - **Focuses**: ui, accessibility, administration
+  - **Keywords**: has-screenshots has-patch has-test-info commit
 
 - ⏳ [#29798](https://core.trac.wordpress.org/ticket/29798) - unified theme and plugin uploader
-  - 🧪 Test Report | General | new
+  - **Type**: 🧪 Test Report | **Component**: General | **Milestone**: Future Release | **Status**: new
+  - **Focuses**: administration
+  - **Keywords**: has-patch good-first-bug needs-testing
 
 ## ❌ Merged Without Props (1)
 
 These were merged but I didn't get props.
 
 - ❌ [#64262](https://core.trac.wordpress.org/ticket/64262) - Coding Standards: Fix improper @return tag documentation across core files
-  - 👀 Code Review | General
+  - **Type**: 👀 Code Review | **Component**: General | **Milestone**: 7.0
+  - **Focuses**: docs, coding-standards
+  - **Keywords**: has-patch
 
 ---
 | Status | Count |

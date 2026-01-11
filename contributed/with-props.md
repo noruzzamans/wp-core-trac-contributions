@@ -6,7 +6,9 @@ Tickets where I contributed and received props in the changeset.
 
 - ✅ [#64211](https://core.trac.wordpress.org/ticket/64211) - Twenty Eleven: Improve PHP DocBlock compliance with WordPress Documentation Standards
   - **Contribution**: 🧪 Test Report
-  - **Component**: Bundled Theme
+  - **Component**: Bundled Theme | **Milestone**: 7.0
+  - **Focuses**: docs
+  - **Keywords**: has-patch
   - **Changeset**: [61309](https://core.trac.wordpress.org/changeset/61309)
 
 ---

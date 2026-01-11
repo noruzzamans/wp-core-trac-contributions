@@ -461,7 +461,11 @@ Tickets where I contributed and received props in the changeset.
             const typeLabel = getTypeLabel(t.contributionType);
             content += `- ✅ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
             content += `  - **Contribution**: ${typeLabel}\n`;
-            content += `  - **Component**: ${t.component}\n`;
+            content += `  - **Component**: ${t.component}`;
+            if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+            content += `\n`;
+            if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+            if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
             if (t.propsChangeset) {
                 content += `  - **Changeset**: [${t.propsChangeset}](${TRAC_BASE_URL}/changeset/${t.propsChangeset})\n`;
             }
@@ -494,7 +498,12 @@ Tickets where I contributed but haven't received props.
         for (const t of pending) {
             const typeLabel = getTypeLabel(t.contributionType);
             content += `- ⏳ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
-            content += `  - ${typeLabel} | ${t.component} | ${t.status}\n\n`;
+            content += `  - **Type**: ${typeLabel} | **Component**: ${t.component}`;
+            if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+            content += ` | **Status**: ${t.status}\n`;
+            if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+            if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
+            content += `\n`;
         }
     }
 
@@ -503,7 +512,12 @@ Tickets where I contributed but haven't received props.
         for (const t of mergedNoProps) {
             const typeLabel = getTypeLabel(t.contributionType);
             content += `- ❌ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
-            content += `  - ${typeLabel} | ${t.component}\n\n`;
+            content += `  - **Type**: ${typeLabel} | **Component**: ${t.component}`;
+            if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+            content += `\n`;
+            if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+            if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
+            content += `\n`;
         }
     }
 
@@ -544,6 +558,11 @@ Tickets that have been merged/fixed in WordPress Core.
             for (const t of withProps) {
                 content += `- ✅ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
                 content += `  - **Contribution**: ${getTypeLabel(t.contributionType)}\n`;
+                content += `  - **Component**: ${t.component}`;
+                if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+                content += `\n`;
+                if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+                if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
                 if (t.propsChangeset) {
                     content += `  - **Changeset**: [${t.propsChangeset}](${TRAC_BASE_URL}/changeset/${t.propsChangeset})\n`;
                 }
@@ -555,7 +574,13 @@ Tickets that have been merged/fixed in WordPress Core.
             content += `## ❌ Merged without Props (${withoutProps.length})\n\n`;
             for (const t of withoutProps) {
                 content += `- ❌ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
-                content += `  - **Contribution**: ${getTypeLabel(t.contributionType)}\n\n`;
+                content += `  - **Contribution**: ${getTypeLabel(t.contributionType)}\n`;
+                content += `  - **Component**: ${t.component}`;
+                if (t.milestone) content += ` | **Milestone**: ${t.milestone}`;
+                content += `\n`;
+                if (t.focuses) content += `  - **Focuses**: ${t.focuses}\n`;
+                if (t.keywords) content += `  - **Keywords**: ${t.keywords}\n`;
+                content += `\n`;
             }
         }
     }
