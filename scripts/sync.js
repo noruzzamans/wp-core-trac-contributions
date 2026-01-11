@@ -651,6 +651,40 @@ My contributions targeting the WordPress 7.0 release.
     return content;
 }
 
+// Generate stats.json for external consumption (e.g., Profile README)
+function generateStatsJson(tickets) {
+    const total = tickets.length;
+    const withProps = tickets.filter(t => t.hasProps).length;
+    const merged = tickets.filter(t => t.isMerged).length;
+    const testReports = tickets.filter(t => t.contributionType === 'test-report').length;
+    const release70 = tickets.filter(t => t.milestone && t.milestone.includes('7.0')).length;
+    const pending = tickets.filter(t => !t.isMerged).length;
+
+    // Count tickets by focus area
+    const focusCounts = {};
+    tickets.forEach(t => {
+        if (t.focuses) {
+            const focuses = t.focuses.split(',').map(f => f.trim().toLowerCase());
+            focuses.forEach(f => {
+                focusCounts[f] = (focusCounts[f] || 0) + 1;
+            });
+        }
+    });
+
+    const stats = {
+        total,
+        props: withProps,
+        merged,
+        test_reports: testReports,
+        release_7_0: release70,
+        pending,
+        focus_areas: focusCounts,
+        last_updated: new Date().toISOString()
+    };
+
+    return JSON.stringify(stats, null, 2);
+}
+
 // Update README with stats
 function updateReadme(tickets) {
     const total = tickets.length;
@@ -798,8 +832,18 @@ async function main() {
     );
     console.log('   ✅ 7.0-release/tickets.md');
 
-    fs.writeFileSync(README_FILE, updateReadme(tickets));
+    fs.writeFileSync(
+        path.join(__dirname, '..', 'README.md'),
+        updateReadme(tickets)
+    );
     console.log('   ✅ README.md');
+
+    // Write stats.json
+    fs.writeFileSync(
+        path.join(__dirname, '..', 'stats.json'),
+        generateStatsJson(tickets)
+    );
+    console.log('   ✅ stats.json (for Profile generation)');
 
     console.log('\n✅ Sync complete!');
     console.log(`   📊 Total: ${tickets.length} tickets`);
