@@ -662,6 +662,37 @@ function updateReadme(tickets) {
     const propsRate = merged > 0 ? Math.round((withProps / merged) * 100) : 0;
     const release70 = tickets.filter(t => t.milestone && t.milestone.includes('7.0')).length;
 
+    // Count tickets by focus area
+    const focusCounts = {};
+    tickets.forEach(t => {
+        if (t.focuses) {
+            const focuses = t.focuses.split(',').map(f => f.trim().toLowerCase());
+            focuses.forEach(f => {
+                focusCounts[f] = (focusCounts[f] || 0) + 1;
+            });
+        }
+    });
+
+    // Sort focuses by count
+    const sortedFocuses = Object.entries(focusCounts)
+        .sort((a, b) => b[1] - a[1]);
+
+    // Generate focus list with counts
+    let focusList = '';
+    const focusIcons = {
+        'ui': '🎨', 'accessibility': '♿', 'performance': '⚡', 'css': '🎨',
+        'docs': '📚', 'administration': '🛠️', 'tests': '🧪', 'coding-standards': '📝'
+    };
+
+    sortedFocuses.forEach(([focus, count]) => {
+        const icon = focusIcons[focus] || '📌';
+        focusList += `- ${icon} **${focus}**: ${count} ticket${count > 1 ? 's' : ''}\n`;
+    });
+
+    if (focusList === '') {
+        focusList = '- *No focus areas tracked yet*\n';
+    }
+
     const content = `# WordPress Core Trac Contributions
 
 Personal tracking for my WordPress Core Trac contributions.
@@ -678,15 +709,9 @@ Personal tracking for my WordPress Core Trac contributions.
 
 ### 🎯 By Milestone
 - 🚀 [7.0 Release](./7.0-release/tickets.md) - **${release70}** tickets for WP 7.0
-- 🔗 [Trac: 7.0 Milestone](https://core.trac.wordpress.org/query?milestone=7.0&comment=~${USERNAME})
 
-### � By Focus (Trac Links)
-- 🎨 [UI/UX](https://core.trac.wordpress.org/query?focuses=~ui&comment=~${USERNAME}) - User Interface
-- ♿ [Accessibility](https://core.trac.wordpress.org/query?focuses=~accessibility&comment=~${USERNAME}) - a11y
-- ⚡ [Performance](https://core.trac.wordpress.org/query?focuses=~performance&comment=~${USERNAME}) - Speed
-- 🎨 [CSS](https://core.trac.wordpress.org/query?focuses=~css&comment=~${USERNAME}) - Styling
-- 📚 [Docs](https://core.trac.wordpress.org/query?focuses=~docs&comment=~${USERNAME}) - Documentation
-
+### 🔍 My Focus Areas
+${focusList}
 ### ✅ Merged
 - 🎉 [Merged Tickets](./merged/tickets.md) - Merged into WordPress Core
 
