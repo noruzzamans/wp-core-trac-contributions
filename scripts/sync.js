@@ -14,46 +14,28 @@ const MERGED_DIR = path.join(ROOT_DIR, 'merged');
 const RELEASE_DIR = path.join(ROOT_DIR, '7.0-release');
 const README_FILE = path.join(ROOT_DIR, 'README.md');
 
-// Known ticket contributions (manually tracked + auto-discovered)
-// This serves as a base - the script will also search for new ones
-// Known tickets (manually tracked metadata fallback)
-// The script primarily uses auto-discovery, this is for fallback/overrides
-const KNOWN_TICKETS = [
-    // 7.0 Milestone Tickets
-    { id: 63697, type: 'participation', focuses: 'performance', keywords: 'enhancement, has-patch', milestone: '7.0' },
-    { id: 43084, type: 'participation', keywords: 'commit', milestone: '7.0' },
-    { id: 64211, type: 'test-report', component: 'Bundled Themes', focuses: 'coding-standards', keywords: 'has-patch', milestone: '7.0' },
-    { id: 64065, type: 'patch-testing', component: 'Accessibility', focuses: 'accessibility', keywords: 'has-patch', milestone: '7.0' },
-    { id: 64262, type: 'participation', component: 'Coding Standards', focuses: 'coding-standards', keywords: 'has-patch', milestone: '7.0' },
-    { id: 62982, type: 'test-report', component: 'Bundled Themes', focuses: 'accessibility', keywords: 'has-patch', milestone: '7.0' }
-];
-
 // Date helpers
 const formatDate = (dateStr) => {
+    if (!dateStr) return 'Unknown';
     const date = new Date(dateStr);
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 };
 
-const getMonthYear = (dateStr) => {
-    const date = new Date(dateStr);
-    const months = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'];
-    return { month: months[date.getMonth()], year: date.getFullYear() };
-};
-
-// Auto-discover tickets involved in
+// Auto-discover ALL tickets user commented on
 async function fetchUserTicketsFromTrac() {
-    console.log(`🔍 Auto-discovering tickets for user: ${USERNAME}...`);
-    // Query finds tickets where user commented (most common)
-    // We start with this proven query that worked in testing
-    const queryUrl = `${TRAC_BASE_URL}/query?comment=~${USERNAME}&col=id&col=summary&col=component&col=status&col=type&col=milestone&order=changetime&desc=1&max=100`;
+    console.log(`🔍 Fetching ALL tickets for user: ${USERNAME}...`);
+
+    const allTickets = [];
+
+    // Fetch tickets where user commented (up to 200)
+    const queryUrl = `${TRAC_BASE_URL}/query?comment=~${USERNAME}&col=id&col=summary&col=component&col=status&col=type&col=milestone&order=changetime&desc=1&max=200`;
 
     try {
         const response = await fetch(queryUrl, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         });
 
@@ -61,180 +43,218 @@ async function fetchUserTicketsFromTrac() {
 
         const html = await response.text();
         const $ = cheerio.load(html);
-        const tickets = [];
 
         // Parse the query result table
-        $('td.id a').each((i, el) => {
-            const href = $(el).attr('href');
-            if (href && href.includes('/ticket/')) {
-                const id = href.split('/').pop().replace('#comment:', '').split('#')[0];
-                if (id && !isNaN(id) && !tickets.includes(parseInt(id))) {
-                    tickets.push(parseInt(id));
+        $('table.tickets tbody tr').each((i, row) => {
+            const $row = $(row);
+            const idLink = $row.find('td.id a');
+            const summaryLink = $row.find('td.summary a');
+            const component = $row.find('td.component').text().trim();
+            const status = $row.find('td.status').text().trim();
+            const type = $row.find('td.type').text().trim();
+            const milestone = $row.find('td.milestone').text().trim();
+
+            if (idLink.length) {
+                const href = idLink.attr('href');
+                const id = parseInt(href.split('/').pop().split('#')[0]);
+
+                if (id && !isNaN(id)) {
+                    allTickets.push({
+                        id,
+                        title: summaryLink.text().trim() || `Ticket #${id}`,
+                        component: component || 'General',
+                        status: status || 'unknown',
+                        type: type || 'defect',
+                        milestone: milestone || ''
+                    });
                 }
             }
         });
 
-        console.log(`   Found ${tickets.length} potential tickets from Trac query`);
-        return tickets;
+        console.log(`   Found ${allTickets.length} tickets from Trac query`);
     } catch (error) {
-        console.error('   ❌ Auto-discovery failed:', error.message);
-        return [];
+        console.error('   ❌ Query failed:', error.message);
     }
+
+    return allTickets;
 }
 
-// Fetch ticket details from Trac
+// Fetch detailed ticket info including user's actual comments
 async function fetchTicketDetails(ticketId) {
     try {
         const url = `${TRAC_BASE_URL}/ticket/${ticketId}`;
         const response = await fetch(url, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         });
+
+        if (!response.ok) return null;
+
         const html = await response.text();
         const $ = cheerio.load(html);
 
-        // Extract ticket info
-        const title = $('h1.searchable').text().trim() || $('title').text().split('–')[0].trim();
-        const status = $('.trac-status a').text().trim() || 'unknown';
-        const resolution = $('.trac-resolution').text().trim() || '';
+        // Basic ticket info
+        const title = $('h2.summary').text().trim() ||
+            $('h1.searchable').text().trim() ||
+            `Ticket #${ticketId}`;
+        const status = $('span.trac-status a').text().trim() || 'unknown';
+        const resolution = $('span.trac-resolution').text().trim() || '';
         const component = $('td[headers="h_component"]').text().trim() || 'General';
         const milestone = $('td[headers="h_milestone"]').text().trim() || '';
-
-        // Extract Focuses and Keywords
         const focuses = $('td[headers="h_focuses"]').text().trim() || '';
         const keywords = $('td[headers="h_keywords"]').text().trim() || '';
+        const reporter = $('td[headers="h_reporter"]').text().trim() || '';
 
-        // Check if merged (has a changeset)
-        const isMerged = resolution.includes('fixed') || status === 'closed';
-        let changesetId = null;
-        let mergedDate = null;
+        // Check if user is the reporter
+        const isReporter = reporter.toLowerCase() === USERNAME.toLowerCase();
 
-        // Look for changeset in comments
-        const changesetMatch = html.match(/changeset\/(\d+)/);
-        if (changesetMatch) {
-            changesetId = changesetMatch[1];
+        // Find ALL user's comments
+        const userComments = [];
+        $('div.change').each((i, el) => {
+            const $change = $(el);
+            const author = $change.find('h3.change a.author').text().trim();
+
+            if (author.toLowerCase() === USERNAME.toLowerCase()) {
+                const commentText = $change.find('div.comment').text().trim();
+                const commentDate = $change.find('h3.change a.timeline').attr('title') || '';
+
+                userComments.push({
+                    text: commentText,
+                    date: commentDate
+                });
+            }
+        });
+
+        // Determine contribution type from comments
+        let contributionType = 'comment';
+        const allCommentText = userComments.map(c => c.text).join(' ').toLowerCase();
+
+        if (allCommentText.includes('tested') ||
+            allCommentText.includes('testing') ||
+            allCommentText.includes('test report') ||
+            allCommentText.includes('confirmed') ||
+            allCommentText.includes('can confirm') ||
+            allCommentText.includes('verified') ||
+            allCommentText.includes('works as expected') ||
+            allCommentText.includes('reproduced')) {
+            contributionType = 'test-report';
+        } else if (allCommentText.includes('patch') ||
+            allCommentText.includes('applied') ||
+            allCommentText.includes('diff') ||
+            allCommentText.includes('fix uploaded')) {
+            contributionType = 'patch';
+        } else if (allCommentText.includes('review') ||
+            allCommentText.includes('code looks')) {
+            contributionType = 'code-review';
+        }
+
+        // Check if closed/merged
+        const isClosed = status === 'closed';
+        const isFixed = resolution.toLowerCase().includes('fixed');
+
+        // Find changesets
+        const changesets = [];
+        $('a[href*="/changeset/"]').each((i, el) => {
+            const href = $(el).attr('href');
+            const match = href.match(/changeset\/(\d+)/);
+            if (match) {
+                changesets.push(match[1]);
+            }
+        });
+
+        // Check props in changesets
+        let hasProps = false;
+        let propsChangeset = null;
+
+        for (const changesetId of changesets.slice(0, 3)) { // Check first 3 changesets
+            try {
+                const csUrl = `${TRAC_BASE_URL}/changeset/${changesetId}`;
+                const csResponse = await fetch(csUrl, {
+                    headers: { 'User-Agent': 'Mozilla/5.0' }
+                });
+                const csHtml = await csResponse.text();
+
+                if (csHtml.toLowerCase().includes(USERNAME.toLowerCase())) {
+                    hasProps = true;
+                    propsChangeset = changesetId;
+                    break;
+                }
+            } catch (e) {
+                // Ignore changeset check errors
+            }
         }
 
         return {
             id: ticketId,
-            title: title.replace(/^#\d+\s*/, '').replace(/\s*\(.*\)$/, ''),
+            title: title.replace(/^#\d+\s*/, '').replace(/\(.*\)$/, '').trim(),
             status,
             resolution,
             component,
             milestone,
             focuses,
             keywords,
-            isMerged,
-            changesetId,
-            mergedDate,
+            reporter,
+            isReporter,
+            contributionType,
+            userComments,
+            commentCount: userComments.length,
+            isClosed,
+            isFixed,
+            isMerged: isClosed && isFixed,
+            hasProps,
+            propsChangeset,
+            changesets,
             url
         };
     } catch (error) {
-        console.error(`Error fetching ticket #${ticketId}:`, error.message);
+        console.error(`   ❌ Error fetching #${ticketId}:`, error.message);
         return null;
     }
 }
 
-// Check if user received props in a changeset
-async function checkPropsInChangeset(changesetId) {
-    if (!changesetId) return false;
-
-    try {
-        const url = `${TRAC_BASE_URL}/changeset/${changesetId}`;
-        const response = await fetch(url);
-        const html = await response.text();
-
-        // Check if username is mentioned in props
-        const hasProps = html.toLowerCase().includes(USERNAME.toLowerCase());
-        return hasProps;
-    } catch (error) {
-        console.error(`Error checking changeset ${changesetId}:`, error.message);
-        return false;
-    }
-}
-
-// Process all tickets and gather full details
+// Process all tickets
 async function processAllTickets() {
-    console.log('📥 Processing all tickets...');
+    console.log('📥 Processing all tickets...\n');
 
-    // Combine known tickets with discovered ones
-    // Use a Map to ensure unique IDs, preferring KNOWN_TICKETS metadata
-    const ticketMap = new Map();
+    // Fetch all tickets from Trac
+    const ticketList = await fetchUserTicketsFromTrac();
 
-    // 1. Add KNOWN_TICKETS first (they act as overrides/metadata source)
-    for (const ticket of KNOWN_TICKETS) {
-        ticketMap.set(ticket.id, ticket);
+    if (ticketList.length === 0) {
+        console.log('   No tickets found!');
+        return [];
     }
 
-    // 2. Fetch/Discover tickets from Trac
-    const discoveredIds = await fetchUserTicketsFromTrac();
-    for (const id of discoveredIds) {
-        if (!ticketMap.has(id)) {
-            ticketMap.set(id, { id: id, type: 'participation', discovered: true });
-        }
-    }
-
-    const allTicketConfigs = Array.from(ticketMap.values());
     const tickets = [];
+    let processed = 0;
 
-    for (const config of allTicketConfigs) {
-        console.log(`   Fetching details for ticket #${config.id}...`);
-        // Add minimal delay to avoid rigorous rate limiting
-        await new Promise(resolve => setTimeout(resolve, 300));
+    for (const basic of ticketList) {
+        processed++;
+        console.log(`   [${processed}/${ticketList.length}] Fetching #${basic.id}...`);
 
-        const details = await fetchTicketDetails(config.id);
+        // Small delay to avoid rate limiting
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        const details = await fetchTicketDetails(basic.id);
 
         if (details) {
-            // Verify participation for auto-discovered tickets (strict mode)
-            // If it's a KNOWN_TICKET, we trust it. If discovered, check if user is reporter or commenter.
-            const isKnown = KNOWN_TICKETS.some(t => t.id === config.id);
-            const isParticipant = isKnown ||
-                details.reporter === USERNAME ||
-                (details.comments && details.comments.some(c => c.author === USERNAME));
-
-            if (!isParticipant) {
-                // Skip tickets where user is mentioned but didn't participate, unless manually tracked
-                // console.log(`   Skipping #${config.id} - No direct participation found`);
-                continue;
-            }
-
-            // Merge config with fetched details
-            const ticket = {
+            // Merge basic info with details
+            tickets.push({
                 ...details,
-                type: config.type || 'participation',
-                contributionType: config.type || 'participation',
-                comment: config.comment,
-                component: config.component || details.component,
-                hasProps: config.props || false,
-                changeset: config.changeset || details.changesetId,
-                // Use config title as fallback if fetched title shows 403 or is empty
-                title: (details.title && !details.title.includes('403') && !details.title.includes('Forbidden'))
-                    ? details.title
-                    : (config.title || `Ticket #${config.id}`),
-                // Use config isMerged as fallback
-                isMerged: details.isMerged || config.isMerged || false,
-                // Focuses, Keywords, Milestone with fallbacks
-                focuses: details.focuses || config.focuses || '',
-                keywords: details.keywords || config.keywords || '',
-                milestone: details.milestone || config.milestone || ''
-            };
-
-            // Check props if we have a changeset
-            if (ticket.changeset && !ticket.hasProps) {
-                ticket.hasProps = await checkPropsInChangeset(ticket.changeset);
-            }
-
-            tickets.push(ticket);
+                component: details.component || basic.component,
+                milestone: details.milestone || basic.milestone,
+                type: basic.type
+            });
         }
     }
 
-    // Sort by ID descending (newest first)
+    // Sort by ID descending
     tickets.sort((a, b) => b.id - a.id);
 
-    console.log(`   Processed ${tickets.length} tickets total`);
+    console.log(`\n✅ Processed ${tickets.length} tickets`);
     console.log(`   - With Props: ${tickets.filter(t => t.hasProps).length}`);
     console.log(`   - Merged: ${tickets.filter(t => t.isMerged).length}`);
+    console.log(`   - Test Reports: ${tickets.filter(t => t.contributionType === 'test-report').length}`);
 
     return tickets;
 }
@@ -243,13 +263,11 @@ async function processAllTickets() {
 function getTypeLabel(type) {
     const labels = {
         'test-report': '🧪 Test Report',
-        'patch-testing': '🔧 Patch Testing',
-        'reproduction': '🔍 Reproduction Report',
-        'metadata': '📝 Metadata Updates',
-        'participation': '💬 Participation',
+        'patch': '📝 Patch',
+        'code-review': '👀 Code Review',
         'comment': '💬 Comment'
     };
-    return labels[type] || '💬 Participation';
+    return labels[type] || '💬 Comment';
 }
 
 // Generate contributed/tickets.md
@@ -262,145 +280,105 @@ function generateContributedTickets(tickets) {
         byComponent[comp].push(ticket);
     }
 
-    let content = `# My Contributed Tickets (2025-2026)
+    let content = `# All My Trac Contributions
 
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: Automated -->
+Total **${tickets.length}** tickets where I participated.
+
+<!-- AUTO-SYNC - DO NOT EDIT -->
 
 `;
 
     const components = Object.keys(byComponent).sort();
 
     for (const component of components) {
-        content += `## ${component}\n`;
+        content += `## ${component}\n\n`;
+
         for (const ticket of byComponent[component]) {
-            const propsIcon = ticket.hasProps ? ' ✅' : '';
-            const typeLabel = getTypeLabel(ticket.type);
-            const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
-            content += `- [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink}) - ${ticket.title}\n`;
-            content += `  - **Type**: ${typeLabel}${propsIcon}\n`;
-            if (ticket.milestone) {
-                content += `  - **Milestone**: ${ticket.milestone}\n`;
-            }
-            if (ticket.focuses) {
-                content += `  - **Focuses**: ${ticket.focuses}\n`;
-            }
-            if (ticket.keywords) {
-                content += `  - **Keywords**: ${ticket.keywords}\n`;
-            }
+            const propsIcon = ticket.hasProps ? '✅' : (ticket.isMerged ? '❌' : '⏳');
+            const statusIcon = ticket.isMerged ? '🔒' : '🔓';
+            const typeLabel = getTypeLabel(ticket.contributionType);
+
+            content += `### ${statusIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id})\n`;
+            content += `**${ticket.title}**\n\n`;
+            content += `| Field | Value |\n`;
+            content += `|-------|-------|\n`;
+            content += `| Contribution | ${typeLabel} |\n`;
+            content += `| Props | ${propsIcon} ${ticket.hasProps ? 'Received' : (ticket.isMerged ? 'Not Given' : 'Pending')} |\n`;
+            content += `| Status | ${ticket.status}${ticket.resolution ? ` (${ticket.resolution})` : ''} |\n`;
+            if (ticket.milestone) content += `| Milestone | ${ticket.milestone} |\n`;
+            if (ticket.commentCount) content += `| My Comments | ${ticket.commentCount} |\n`;
             content += `\n`;
         }
     }
 
+    // Summary
     const withProps = tickets.filter(t => t.hasProps).length;
     const merged = tickets.filter(t => t.isMerged).length;
+    const testReports = tickets.filter(t => t.contributionType === 'test-report').length;
+    const patches = tickets.filter(t => t.contributionType === 'patch').length;
 
-    content += `<!-- AUTO-SYNC END -->
+    content += `---
+## 📊 Summary
 
----
-## Summary
 | Category | Count |
-|----------|-------|
-| ✅ With Props | ${withProps} |
-| 🔄 Merged | ${merged} |
-| **Total** | **${tickets.length}** |
+|----------|------:|
+| 📝 Total Tickets | ${tickets.length} |
+| ✅ Props Received | ${withProps} |
+| 🔒 Merged/Fixed | ${merged} |
+| 🧪 Test Reports | ${testReports} |
+| 📝 Patches | ${patches} |
 `;
 
     return content;
 }
 
-// Generate contributed/test-reports.md (includes patch testing)
+// Generate contributed/test-reports.md
 function generateTestReports(tickets) {
-    const testReports = tickets.filter(t => t.type === 'test-report');
-    const patchTests = tickets.filter(t => t.type === 'patch-testing');
-    const allTests = [...testReports, ...patchTests];
+    const testReports = tickets.filter(t => t.contributionType === 'test-report');
 
-    let content = `# Test Reports & Patch Testing
+    let content = `# My Test Reports
 
-All testing contributions - test reports and patch testing.
+All tickets where I provided testing contributions.
 
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: Automated -->
+<!-- AUTO-SYNC - DO NOT EDIT -->
 
 `;
 
-    if (allTests.length === 0) {
-        content += `*No test contributions yet*\n\n`;
+    if (testReports.length === 0) {
+        content += `*No test reports yet*\n\n`;
     } else {
-        // Test Reports section
-        if (testReports.length > 0) {
-            content += `## 🧪 Test Reports\n\n`;
-            for (const ticket of testReports) {
-                const propsIcon = ticket.hasProps ? '✅' : '⏳';
-                const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
-                content += `- ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink}) - ${ticket.title}\n`;
-                content += `  - **Component**: ${ticket.component}\n`;
-                if (ticket.milestone) content += `  - **Milestone**: ${ticket.milestone}\n`;
-                if (ticket.focuses) content += `  - **Focuses**: ${ticket.focuses}\n`;
-                if (ticket.keywords) content += `  - **Keywords**: ${ticket.keywords}\n`;
-                content += `\n`;
+        // Group by props status
+        const withProps = testReports.filter(t => t.hasProps);
+        const merged = testReports.filter(t => t.isMerged && !t.hasProps);
+        const pending = testReports.filter(t => !t.isMerged);
+
+        if (withProps.length > 0) {
+            content += `## ✅ Props Received (${withProps.length})\n\n`;
+            for (const t of withProps) {
+                content += `- ✅ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
+                content += `  - **Component**: ${t.component}${t.milestone ? ` | **Milestone**: ${t.milestone}` : ''}\n\n`;
             }
         }
 
-        // Patch Testing section
-        if (patchTests.length > 0) {
-            content += `## 🔧 Patch Testing\n\n`;
-            for (const ticket of patchTests) {
-                const propsIcon = ticket.hasProps ? '✅' : '⏳';
-                const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
-                content += `- ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink}) - ${ticket.title}\n`;
-                content += `  - **Component**: ${ticket.component}\n`;
-                if (ticket.milestone) content += `  - **Milestone**: ${ticket.milestone}\n`;
-                if (ticket.focuses) content += `  - **Focuses**: ${ticket.focuses}\n`;
-                if (ticket.keywords) content += `  - **Keywords**: ${ticket.keywords}\n`;
-                content += `\n`;
+        if (merged.length > 0) {
+            content += `## ❌ Merged Without Props (${merged.length})\n\n`;
+            for (const t of merged) {
+                content += `- ❌ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
+                content += `  - **Component**: ${t.component}${t.milestone ? ` | **Milestone**: ${t.milestone}` : ''}\n\n`;
+            }
+        }
+
+        if (pending.length > 0) {
+            content += `## ⏳ Pending (${pending.length})\n\n`;
+            for (const t of pending) {
+                content += `- ⏳ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
+                content += `  - **Component**: ${t.component} | **Status**: ${t.status}\n\n`;
             }
         }
     }
 
-    content += `<!-- AUTO-SYNC END -->
-
----
-## Summary
-| Type | Count |
-|------|-------|
-| 🧪 Test Reports | ${testReports.length} |
-| 🔧 Patch Testing | ${patchTests.length} |
-| **Total** | **${allTests.length}** |
-`;
-
-    return content;
-}
-
-// Generate contributed/patch-testing.md
-function generatePatchTesting(tickets) {
-    const patchTests = tickets.filter(t => t.type === 'patch-testing');
-
-    let content = `# Patch Testing
-
-Patches I tested on Trac tickets.
-
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: Automated -->
-
-`;
-
-    if (patchTests.length === 0) {
-        content += `*No patch testing yet*\n\n`;
-    } else {
-        for (const ticket of patchTests) {
-            const propsIcon = ticket.hasProps ? '✅' : '⏳';
-            const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
-            content += `- ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink}) - ${ticket.title}\n`;
-            content += `  - **Component**: ${ticket.component}\n`;
-            content += `\n`;
-        }
-    }
-
-    content += `<!-- AUTO-SYNC END -->
-
----
-**Total Patch Tests**: ${patchTests.length}
+    content += `---
+**Total Test Reports**: ${testReports.length}
 `;
 
     return content;
@@ -410,33 +388,30 @@ Patches I tested on Trac tickets.
 function generateWithProps(tickets) {
     const withProps = tickets.filter(t => t.hasProps);
 
-    let content = `# Props Received
+    let content = `# ✅ Props Received
 
-Tickets where I received props in the changeset.
+Tickets where I contributed and received props in the changeset.
 
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: Automated -->
+<!-- AUTO-SYNC - DO NOT EDIT -->
 
 `;
 
     if (withProps.length === 0) {
-        content += `*No props received yet*\n\n`;
+        content += `*No props received yet - keep contributing!*\n\n`;
     } else {
-        for (const ticket of withProps) {
-            const typeLabel = getTypeLabel(ticket.type);
-            content += `- ✅ [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}) - ${ticket.title}\n`;
+        for (const t of withProps) {
+            const typeLabel = getTypeLabel(t.contributionType);
+            content += `- ✅ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
             content += `  - **Contribution**: ${typeLabel}\n`;
-            content += `  - **Component**: ${ticket.component}\n`;
-            if (ticket.changeset) {
-                content += `  - **Changeset**: [${ticket.changeset}](${TRAC_BASE_URL}/changeset/${ticket.changeset})\n`;
+            content += `  - **Component**: ${t.component}\n`;
+            if (t.propsChangeset) {
+                content += `  - **Changeset**: [${t.propsChangeset}](${TRAC_BASE_URL}/changeset/${t.propsChangeset})\n`;
             }
             content += `\n`;
         }
     }
 
-    content += `<!-- AUTO-SYNC END -->
-
----
+    content += `---
 **Total Props Received**: ${withProps.length}
 `;
 
@@ -445,50 +420,45 @@ Tickets where I received props in the changeset.
 
 // Generate contributed/without-props.md
 function generateWithoutProps(tickets) {
-    const withoutProps = tickets.filter(t => !t.hasProps);
+    // No props: either pending or merged without props
+    const pending = tickets.filter(t => !t.hasProps && !t.isMerged);
+    const mergedNoProps = tickets.filter(t => !t.hasProps && t.isMerged);
 
     let content = `# No Props Yet
 
-Tickets where I contributed but haven't received props yet.
+Tickets where I contributed but haven't received props.
 
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: Automated -->
+<!-- AUTO-SYNC - DO NOT EDIT -->
 
 `;
 
-    if (withoutProps.length === 0) {
-        content += `*All contributions have received props!*\n\n`;
-    } else {
-        const open = withoutProps.filter(t => !t.isMerged);
-        const merged = withoutProps.filter(t => t.isMerged);
-
-        if (open.length > 0) {
-            content += `## ⏳ Open/Pending\n\n`;
-            for (const ticket of open) {
-                const typeLabel = getTypeLabel(ticket.type);
-                content += `- ⏳ [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}) - ${ticket.title}\n`;
-                content += `  - **Contribution**: ${typeLabel}\n`;
-                content += `  - **Component**: ${ticket.component}\n`;
-                content += `\n`;
-            }
-        }
-
-        if (merged.length > 0) {
-            content += `## 🤔 Merged (No Props)\n\n`;
-            for (const ticket of merged) {
-                const typeLabel = getTypeLabel(ticket.type);
-                content += `- 🤔 [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}) - ${ticket.title}\n`;
-                content += `  - **Contribution**: ${typeLabel}\n`;
-                content += `  - **Component**: ${ticket.component}\n`;
-                content += `\n`;
-            }
+    if (pending.length > 0) {
+        content += `## ⏳ Pending (${pending.length})\n\nThese are still open - will get props once merged!\n\n`;
+        for (const t of pending) {
+            const typeLabel = getTypeLabel(t.contributionType);
+            content += `- ⏳ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
+            content += `  - ${typeLabel} | ${t.component} | ${t.status}\n\n`;
         }
     }
 
-    content += `<!-- AUTO-SYNC END -->
+    if (mergedNoProps.length > 0) {
+        content += `## ❌ Merged Without Props (${mergedNoProps.length})\n\nThese were merged but I didn't get props.\n\n`;
+        for (const t of mergedNoProps) {
+            const typeLabel = getTypeLabel(t.contributionType);
+            content += `- ❌ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
+            content += `  - ${typeLabel} | ${t.component}\n\n`;
+        }
+    }
 
----
-**Total Without Props**: ${withoutProps.length}
+    if (pending.length === 0 && mergedNoProps.length === 0) {
+        content += `*All contributions have received props! 🎉*\n\n`;
+    }
+
+    content += `---
+| Status | Count |
+|--------|------:|
+| ⏳ Pending | ${pending.length} |
+| ❌ Merged (No Props) | ${mergedNoProps.length} |
 `;
 
     return content;
@@ -496,53 +466,46 @@ Tickets where I contributed but haven't received props yet.
 
 // Generate merged/tickets.md
 function generateMergedTickets(tickets) {
-    const merged = tickets.filter(t => t.hasProps && t.isMerged);
-
-    // Group by year then month (use current date as approximation)
-    const byYear = {};
-    for (const ticket of merged) {
-        const year = 2025; // Most contributions are from 2025
-        const month = 'November'; // Approximation
-        if (!byYear[year]) byYear[year] = {};
-        if (!byYear[year][month]) byYear[year][month] = [];
-        byYear[year][month].push(ticket);
-    }
+    const merged = tickets.filter(t => t.isMerged);
 
     let content = `# Merged Tickets
 
-Tickets merged into WordPress Core where I received props.
+Tickets that have been merged/fixed in WordPress Core.
 
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: Automated -->
+<!-- AUTO-SYNC - DO NOT EDIT -->
 
 `;
 
     if (merged.length === 0) {
-        content += `*No merged tickets with props yet*\n\n`;
+        content += `*No merged tickets yet*\n\n`;
     } else {
-        const years = Object.keys(byYear).sort((a, b) => b - a);
-        for (const year of years) {
-            content += `## ${year}\n\n`;
-            const months = Object.keys(byYear[year]);
-            for (const month of months) {
-                content += `### ${month}\n`;
-                for (const ticket of byYear[year][month]) {
-                    const typeLabel = getTypeLabel(ticket.type);
-                    content += `- ✅ [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}) - ${ticket.title}\n`;
-                    if (ticket.changeset) {
-                        content += `  - **Changeset**: [${ticket.changeset}](${TRAC_BASE_URL}/changeset/${ticket.changeset})\n`;
-                    }
-                    content += `  - **Contribution**: ${typeLabel}\n`;
-                    content += `\n`;
+        // Split by props
+        const withProps = merged.filter(t => t.hasProps);
+        const withoutProps = merged.filter(t => !t.hasProps);
+
+        if (withProps.length > 0) {
+            content += `## ✅ Merged with Props (${withProps.length})\n\n`;
+            for (const t of withProps) {
+                content += `- ✅ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
+                content += `  - **Contribution**: ${getTypeLabel(t.contributionType)}\n`;
+                if (t.propsChangeset) {
+                    content += `  - **Changeset**: [${t.propsChangeset}](${TRAC_BASE_URL}/changeset/${t.propsChangeset})\n`;
                 }
+                content += `\n`;
+            }
+        }
+
+        if (withoutProps.length > 0) {
+            content += `## ❌ Merged without Props (${withoutProps.length})\n\n`;
+            for (const t of withoutProps) {
+                content += `- ❌ [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id}) - ${t.title}\n`;
+                content += `  - **Contribution**: ${getTypeLabel(t.contributionType)}\n\n`;
             }
         }
     }
 
-    content += `<!-- AUTO-SYNC END -->
-
----
-**Total Merged with Props**: ${merged.length}
+    content += `---
+**Total Merged**: ${merged.length} | ✅ With Props: ${merged.filter(t => t.hasProps).length}
 `;
 
     return content;
@@ -554,10 +517,9 @@ function generate7ReleaseTickets(tickets) {
 
     let content = `# WordPress 7.0 Release Contributions
 
-My contributions targeting WordPress 7.0 release.
+My contributions targeting the WordPress 7.0 release.
 
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: Automated -->
+<!-- AUTO-SYNC - DO NOT EDIT -->
 
 `;
 
@@ -566,45 +528,42 @@ My contributions targeting WordPress 7.0 release.
     } else {
         // Group by component
         const byComponent = {};
-        for (const ticket of releaseTickets) {
-            const comp = ticket.component || 'General';
+        for (const t of releaseTickets) {
+            const comp = t.component || 'General';
             if (!byComponent[comp]) byComponent[comp] = [];
-            byComponent[comp].push(ticket);
+            byComponent[comp].push(t);
         }
 
-        for (const component of Object.keys(byComponent).sort()) {
-            content += `## ${component}\n\n`;
-            for (const ticket of byComponent[component]) {
-                const propsIcon = ticket.hasProps ? '✅' : '⏳';
-                const typeLabel = getTypeLabel(ticket.type);
-                const commentLink = ticket.comment ? `#comment:${ticket.comment}` : '';
-                content += `### ${propsIcon} [#${ticket.id}](${TRAC_BASE_URL}/ticket/${ticket.id}${commentLink})\n`;
-                content += `**${ticket.title}**\n\n`;
+        for (const comp of Object.keys(byComponent).sort()) {
+            content += `## ${comp}\n\n`;
+            for (const t of byComponent[comp]) {
+                const propsIcon = t.hasProps ? '✅' : (t.isMerged ? '❌' : '⏳');
+                content += `### ${propsIcon} [#${t.id}](${TRAC_BASE_URL}/ticket/${t.id})\n`;
+                content += `**${t.title}**\n\n`;
                 content += `| Field | Value |\n`;
                 content += `|-------|-------|\n`;
-                content += `| Type | ${typeLabel} |\n`;
-                content += `| Component | ${ticket.component} |\n`;
-                content += `| Milestone | ${ticket.milestone} |\n`;
-                if (ticket.focuses) content += `| Focuses | ${ticket.focuses} |\n`;
-                if (ticket.keywords) content += `| Keywords | ${ticket.keywords} |\n`;
-                content += `| Props | ${ticket.hasProps ? '✅ Received' : '⏳ Pending'} |\n`;
+                content += `| Type | ${getTypeLabel(t.contributionType)} |\n`;
+                content += `| Status | ${t.status} |\n`;
+                if (t.focuses) content += `| Focuses | ${t.focuses} |\n`;
+                if (t.keywords) content += `| Keywords | ${t.keywords} |\n`;
+                content += `| Props | ${propsIcon} ${t.hasProps ? 'Received' : (t.isMerged ? 'Not Given' : 'Pending')} |\n`;
                 content += `\n`;
             }
         }
     }
 
     const withProps = releaseTickets.filter(t => t.hasProps).length;
-    const pending = releaseTickets.filter(t => !t.hasProps).length;
+    const pending = releaseTickets.filter(t => !t.hasProps && !t.isMerged).length;
+    const mergedNoProps = releaseTickets.filter(t => !t.hasProps && t.isMerged).length;
 
-    content += `<!-- AUTO-SYNC END -->
-
----
+    content += `---
 ## Summary
 | Status | Count |
-|--------|-------|
-| ✅ Props Received | ${withProps} |
+|--------|------:|
+| ✅ Props | ${withProps} |
 | ⏳ Pending | ${pending} |
-| **Total 7.0 Tickets** | **${releaseTickets.length}** |
+| ❌ Merged (No Props) | ${mergedNoProps} |
+| **Total** | **${releaseTickets.length}** |
 `;
 
     return content;
@@ -615,51 +574,37 @@ function updateReadme(tickets) {
     const total = tickets.length;
     const withProps = tickets.filter(t => t.hasProps).length;
     const merged = tickets.filter(t => t.isMerged).length;
-    const testReports = tickets.filter(t => t.type === 'test-report').length;
-    const patchTesting = tickets.filter(t => t.type === 'patch-testing').length;
-    const open = tickets.filter(t => !t.isMerged).length;
-    const propsRate = total > 0 ? Math.round((withProps / total) * 100) : 0;
+    const testReports = tickets.filter(t => t.contributionType === 'test-report').length;
+    const patches = tickets.filter(t => t.contributionType === 'patch').length;
+    const pending = tickets.filter(t => !t.isMerged).length;
+    const propsRate = total > 0 ? Math.round((withProps / merged) * 100) || 0 : 0;
     const release70 = tickets.filter(t => t.milestone && t.milestone.includes('7.0')).length;
-
-    // Count by component
-    const byComponent = {};
-    for (const ticket of tickets) {
-        const comp = ticket.component || 'General';
-        byComponent[comp] = (byComponent[comp] || 0) + 1;
-    }
-
-    const today = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
 
     const content = `# WordPress Core Trac Contributions
 
-Personal tracking for WordPress Core Trac contributions.
+Personal tracking for my WordPress Core Trac contributions.
 
 ## Quick Navigation
 
 ### 📊 Contributions
-- 📝 [All Tickets](./contributed/tickets.md) - All my contributions
-- 🧪 [Test Reports & Patch Testing](./contributed/test-reports.md) - Testing contributions
-- ✅ [Props Received](./contributed/with-props.md) - Tickets with props
-- ⏳ [No Props Yet](./contributed/without-props.md) - Waiting for props
+- 📝 [All Tickets](./contributed/tickets.md) - Every ticket I'm involved in
+- 🧪 [Test Reports](./contributed/test-reports.md) - My testing contributions
+- ✅ [Props Received](./contributed/with-props.md) - Credits received
+- ⏳ [No Props Yet](./contributed/without-props.md) - Pending/missed props
 
 ### ✅ Merged
-- 🎉 [Merged Tickets](./merged/tickets.md) - Merged into Core
+- 🎉 [Merged Tickets](./merged/tickets.md) - Merged into WordPress Core
 
 ### 🚀 7.0 Release
-- 🎯 [7.0 Release Tickets](./7.0-release/tickets.md) - **${release70}** tickets targeted for WordPress 7.0
+- 🎯 [7.0 Release](./7.0-release/tickets.md) - **${release70}** tickets for WP 7.0
 
 ### 🎯 Goals
 - [2026 Goals](./next-targets/2026-goals.md) - Contribution targets
 - 👤 [About Me](./about-me.md) - Profile & expertise
 
-## 📈 Stats (Auto-Updated)
+## 📈 Stats
 
-
-<table width="100%" style="width: 100% !important;">
+<table width="100%">
 <tr>
 <td width="33.33%" align="center" valign="top"><b>📊 Contributions</b></td>
 <td width="33.33%" align="center" valign="top"><b>📁 By Type</b></td>
@@ -672,8 +617,8 @@ Personal tracking for WordPress Core Trac contributions.
 |:-------|------:|
 | [📝 Total](./contributed/tickets.md) | ${total} |
 | [✅ Props](./contributed/with-props.md) | ${withProps} |
-| [🔄 Merged](./merged/tickets.md) | ${merged} |
-| [⏳ Pending](./contributed/without-props.md) | ${open} |
+| [🔒 Merged](./merged/tickets.md) | ${merged} |
+| [⏳ Pending](./contributed/without-props.md) | ${pending} |
 
 </td>
 <td width="33.33%" valign="top">
@@ -681,8 +626,8 @@ Personal tracking for WordPress Core Trac contributions.
 | Type | Count |
 |:-------|------:|
 | [🧪 Test Reports](./contributed/test-reports.md) | ${testReports} |
-| [🔧 Patch Testing](./contributed/test-reports.md) | ${patchTesting} |
-| 💬 Other | ${total - testReports - patchTesting} |
+| 📝 Patches | ${patches} |
+| 💬 Comments | ${total - testReports - patches} |
 
 </td>
 <td width="33.34%" valign="top">
@@ -690,16 +635,13 @@ Personal tracking for WordPress Core Trac contributions.
 | Metric | Value |
 |:-------|:------|
 | 📈 Props Rate | **${propsRate}%** |
-| 🎉 Total | **${total}** tickets |
-| 🔥 Merged | **${merged}** into Core |
+| 🎯 7.0 Tickets | **${release70}** |
+| 🔥 Active | **${pending}** pending |
 | ⭐ Success | **${withProps}** props |
 
 </td>
 </tr>
 </table>
-
----
-**Last Synced**: Automated
 `;
 
     return content;
@@ -710,18 +652,19 @@ async function main() {
     console.log('🚀 Starting WordPress Core Trac sync...\n');
 
     // Ensure directories exist
-    if (!fs.existsSync(CONTRIBUTED_DIR)) {
-        fs.mkdirSync(CONTRIBUTED_DIR, { recursive: true });
-    }
-    if (!fs.existsSync(MERGED_DIR)) {
-        fs.mkdirSync(MERGED_DIR, { recursive: true });
-    }
-    if (!fs.existsSync(RELEASE_DIR)) {
-        fs.mkdirSync(RELEASE_DIR, { recursive: true });
-    }
+    [CONTRIBUTED_DIR, MERGED_DIR, RELEASE_DIR].forEach(dir => {
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+    });
 
     // Process all tickets
     const tickets = await processAllTickets();
+
+    if (tickets.length === 0) {
+        console.log('\n❌ No tickets found. Exiting.');
+        return;
+    }
 
     console.log('\n📝 Generating markdown files...');
 
@@ -756,7 +699,6 @@ async function main() {
     );
     console.log('   ✅ merged/tickets.md');
 
-    // Generate 7.0 release files
     fs.writeFileSync(
         path.join(RELEASE_DIR, 'tickets.md'),
         generate7ReleaseTickets(tickets)
@@ -767,10 +709,10 @@ async function main() {
     console.log('   ✅ README.md');
 
     console.log('\n✅ Sync complete!');
-    console.log(`   Total tickets: ${tickets.length}`);
-    console.log(`   With props: ${tickets.filter(t => t.hasProps).length}`);
-    console.log(`   Merged: ${tickets.filter(t => t.isMerged).length}`);
+    console.log(`   📊 Total: ${tickets.length} tickets`);
+    console.log(`   ✅ Props: ${tickets.filter(t => t.hasProps).length}`);
+    console.log(`   🔒 Merged: ${tickets.filter(t => t.isMerged).length}`);
+    console.log(`   🧪 Test Reports: ${tickets.filter(t => t.contributionType === 'test-report').length}`);
 }
 
 main().catch(console.error);
-

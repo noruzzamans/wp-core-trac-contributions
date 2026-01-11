@@ -1,13 +1,10 @@
-# Props Received
+# ✅ Props Received
 
-Tickets where I received props in the changeset.
+Tickets where I contributed and received props in the changeset.
 
-<!-- AUTO-SYNC START - DO NOT EDIT BELOW THIS LINE -->
-<!-- Last synced: 2026-01-11T02:11:54.458Z -->
+<!-- AUTO-SYNC - DO NOT EDIT -->
 
-*No props received yet*
-
-<!-- AUTO-SYNC END -->
+*No props received yet - keep contributing!*
 
 ---
 **Total Props Received**: 0
