@@ -6,31 +6,21 @@ Personal tracking for my WordPress Core Trac contributions.
 
 ## Quick Navigation
 
-### 📊 Contributions
-- 📝 [All Tickets](./contributed/tickets.md) - Every ticket I contributed to
-- 🧪 [Test Reports](./contributed/test-reports.md) - My testing contributions
-- ✅ [Props Received](./contributed/with-props.md) - Credits received
-- ⏳ [No Props Yet](./contributed/without-props.md) - Pending/missed props
-
-### 🎯 By Milestone
-- 🚀 [7.0 Release](./7.0-release/tickets.md) - **6** tickets for WP 7.0
+| 📊 Contributions | 🎯 Milestone & Merged |
+|:-----------------|:----------------------|
+| 📝 [All Tickets](./contributed/tickets.md) | 🚀 [7.0 Release](./7.0-release/tickets.md) - **6** tickets |
+| 🧪 [Test Reports](./contributed/test-reports.md) | 🎉 [Merged Tickets](./merged/tickets.md) |
+| ✅ [Props Received](./contributed/with-props.md) | [2026 Goals](./next-targets/2026-goals.md) |
+| ⏳ [No Props Yet](./contributed/without-props.md) | 👤 [About Me](./about-me.md) |
 
 ### 🔍 My Focus Areas
-- 🎨 **css**: 4 tickets
-- 🎨 **ui**: 4 tickets
-- ♿ **accessibility**: 3 tickets
-- ⚡ **performance**: 2 tickets
-- 📚 **docs**: 2 tickets
-- 🛠️ **administration**: 2 tickets
-- 📝 **coding-standards**: 1 ticket
-- 🧪 **tests**: 1 ticket
+| Focus | Tickets | Focus | Tickets |
+|:------|:--------|:------|:--------|
+| 🎨 **css** | 4 | 🎨 **ui** | 4 |
+| ♿ **accessibility** | 3 | ⚡ **performance** | 2 |
+| 📚 **docs** | 2 | 🛠️ **administration** | 2 |
+| 📝 **coding-standards** | 1 | 🧪 **tests** | 1 |
 
-### ✅ Merged
-- 🎉 [Merged Tickets](./merged/tickets.md) - Merged into WordPress Core
-
-### 🎯 Goals
-- [2026 Goals](./next-targets/2026-goals.md) - Contribution targets
-- 👤 [About Me](./about-me.md) - Profile & expertise
 
 ## 📈 Stats
 

@@ -677,20 +677,33 @@ function updateReadme(tickets) {
     const sortedFocuses = Object.entries(focusCounts)
         .sort((a, b) => b[1] - a[1]);
 
-    // Generate focus list with counts
-    let focusList = '';
+    // Generate focus table with counts (2 columns)
+    let focusTable = '';
     const focusIcons = {
         'ui': '🎨', 'accessibility': '♿', 'performance': '⚡', 'css': '🎨',
         'docs': '📚', 'administration': '🛠️', 'tests': '🧪', 'coding-standards': '📝'
     };
 
-    sortedFocuses.forEach(([focus, count]) => {
-        const icon = focusIcons[focus] || '📌';
-        focusList += `- ${icon} **${focus}**: ${count} ticket${count > 1 ? 's' : ''}\n`;
-    });
+    if (sortedFocuses.length > 0) {
+        focusTable = `| Focus | Tickets | Focus | Tickets |\n|:------|:--------|:------|:--------|\n`;
 
-    if (focusList === '') {
-        focusList = '- *No focus areas tracked yet*\n';
+        // Create pairs for 2-column layout
+        for (let i = 0; i < sortedFocuses.length; i += 2) {
+            const [focus1, count1] = sortedFocuses[i];
+            const icon1 = focusIcons[focus1] || '📌';
+            const cell1 = `${icon1} **${focus1}** | ${count1}`;
+
+            let cell2 = ' | ';
+            if (i + 1 < sortedFocuses.length) {
+                const [focus2, count2] = sortedFocuses[i + 1];
+                const icon2 = focusIcons[focus2] || '📌';
+                cell2 = `${icon2} **${focus2}** | ${count2}`;
+            }
+
+            focusTable += `| ${cell1} | ${cell2} |\n`;
+        }
+    } else {
+        focusTable = '*No focus areas tracked yet*\n';
     }
 
     const content = `# WordPress Core Trac Contributions
@@ -701,23 +714,15 @@ Personal tracking for my WordPress Core Trac contributions.
 
 ## Quick Navigation
 
-### 📊 Contributions
-- 📝 [All Tickets](./contributed/tickets.md) - Every ticket I contributed to
-- 🧪 [Test Reports](./contributed/test-reports.md) - My testing contributions
-- ✅ [Props Received](./contributed/with-props.md) - Credits received
-- ⏳ [No Props Yet](./contributed/without-props.md) - Pending/missed props
-
-### 🎯 By Milestone
-- 🚀 [7.0 Release](./7.0-release/tickets.md) - **${release70}** tickets for WP 7.0
+| 📊 Contributions | 🎯 Milestone & Merged |
+|:-----------------|:----------------------|
+| 📝 [All Tickets](./contributed/tickets.md) | 🚀 [7.0 Release](./7.0-release/tickets.md) - **${release70}** tickets |
+| 🧪 [Test Reports](./contributed/test-reports.md) | 🎉 [Merged Tickets](./merged/tickets.md) |
+| ✅ [Props Received](./contributed/with-props.md) | [2026 Goals](./next-targets/2026-goals.md) |
+| ⏳ [No Props Yet](./contributed/without-props.md) | 👤 [About Me](./about-me.md) |
 
 ### 🔍 My Focus Areas
-${focusList}
-### ✅ Merged
-- 🎉 [Merged Tickets](./merged/tickets.md) - Merged into WordPress Core
-
-### 🎯 Goals
-- [2026 Goals](./next-targets/2026-goals.md) - Contribution targets
-- 👤 [About Me](./about-me.md) - Profile & expertise
+${focusTable}
 
 ## 📈 Stats
 
