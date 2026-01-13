@@ -678,8 +678,7 @@ function generateStatsJson(tickets) {
         test_reports: testReports,
         release_7_0: release70,
         pending,
-        focus_areas: focusCounts,
-        last_updated: new Date().toISOString()
+        focus_areas: focusCounts
     };
 
     return JSON.stringify(stats, null, 2);
