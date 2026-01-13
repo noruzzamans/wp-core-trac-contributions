@@ -11,12 +11,16 @@ All tickets where I provided testing contributions.
   - **Focuses**: docs
   - **Keywords**: has-patch
 
-## ⏳ Pending (8)
+## ⏳ Pending (9)
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - Outlined buttons now have grey background
   - **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
   - **Focuses**: css, performance
   - **Keywords**: has-patch has-unit-tests needs-testing
+
+- ⏳ [#64221](https://core.trac.wordpress.org/ticket/64221) - Reclassify `json2php` as a `devDependency`
+  - **Component**: Build/Test Tools | **Milestone**: 7.0 | **Status**: reviewing
+  - **Keywords**: good-first-bug has-patch
 
 - ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065) - Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.
   - **Component**: General | **Milestone**: 7.0 | **Status**: new
@@ -54,4 +58,4 @@ All tickets where I provided testing contributions.
   - **Keywords**: has-patch good-first-bug needs-testing
 
 ---
-**Total Test Reports**: 9
+**Total Test Reports**: 10

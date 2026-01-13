@@ -4,7 +4,7 @@ Tickets where I contributed but haven't received props.
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
 
-## ⏳ Pending (9)
+## ⏳ Pending (10)
 
 These are still open - will get props once merged!
 
@@ -12,6 +12,10 @@ These are still open - will get props once merged!
   - **Type**: 🧪 Test Report | **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
   - **Focuses**: css, performance
   - **Keywords**: has-patch has-unit-tests needs-testing
+
+- ⏳ [#64221](https://core.trac.wordpress.org/ticket/64221) - Reclassify `json2php` as a `devDependency`
+  - **Type**: 🧪 Test Report | **Component**: Build/Test Tools | **Milestone**: 7.0 | **Status**: reviewing
+  - **Keywords**: good-first-bug has-patch
 
 - ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065) - Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.
   - **Type**: 🧪 Test Report | **Component**: General | **Milestone**: 7.0 | **Status**: new
@@ -64,5 +68,5 @@ These were merged but I didn't get props.
 ---
 | Status | Count |
 |--------|------:|
-| ⏳ Pending | 9 |
+| ⏳ Pending | 10 |
 | ❌ Merged (No Props) | 1 |

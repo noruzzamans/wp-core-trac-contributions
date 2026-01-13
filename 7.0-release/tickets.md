@@ -4,6 +4,18 @@ My contributions targeting the WordPress 7.0 release.
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
 
+## Build/Test Tools
+
+### ⏳ [#64221](https://core.trac.wordpress.org/ticket/64221)
+**Reclassify `json2php` as a `devDependency`**
+
+| Field | Value |
+|-------|-------|
+| Type | 🧪 Test Report |
+| Status | reviewing |
+| Keywords | good-first-bug has-patch |
+| Props | ⏳ Pending |
+
 ## Bundled Theme
 
 ### ✅ [#64211](https://core.trac.wordpress.org/ticket/64211)
@@ -83,6 +95,6 @@ My contributions targeting the WordPress 7.0 release.
 | Status | Count |
 |--------|------:|
 | ✅ Props | 1 |
-| ⏳ Pending | 4 |
+| ⏳ Pending | 5 |
 | ❌ Merged (No Props) | 1 |
-| **Total** | **6** |
+| **Total** | **7** |

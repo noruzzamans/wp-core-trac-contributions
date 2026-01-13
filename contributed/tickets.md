@@ -1,10 +1,24 @@
 # My Trac Contributions
 
-Total **11** tickets where I participated.
+Total **12** tickets where I participated.
 
 > 📋 Source: [My Trac Comments](https://core.trac.wordpress.org/my-comments/all?USER=noruzzaman&max=200)
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
+
+## Build/Test Tools
+
+### 🔓 [#64221](https://core.trac.wordpress.org/ticket/64221)
+**Reclassify `json2php` as a `devDependency`**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 🧪 Test Report |
+| Props | ⏳ Pending |
+| Status | reviewing |
+| Milestone | 7.0 |
+| Keywords | good-first-bug has-patch |
+| My Comments | 1 |
 
 ## Bundled Theme
 
@@ -164,8 +178,8 @@ Total **11** tickets where I participated.
 
 | Category | Count |
 |----------|------:|
-| 📝 Total Tickets | 11 |
+| 📝 Total Tickets | 12 |
 | ✅ Props Received | 1 |
 | 🔒 Merged/Fixed | 2 |
-| 🧪 Test Reports | 9 |
+| 🧪 Test Reports | 10 |
 | 📝 Patches | 0 |
