@@ -1,10 +1,10 @@
 {
-  "total": 12,
+  "total": 13,
   "props": 1,
   "merged": 2,
-  "test_reports": 10,
+  "test_reports": 11,
   "release_7_0": 7,
-  "pending": 10,
+  "pending": 11,
   "focus_areas": {
     "administration": 3,
     "css": 4,

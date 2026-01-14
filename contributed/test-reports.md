@@ -11,7 +11,12 @@ All tickets where I provided testing contributions.
   - **Focuses**: docs
   - **Keywords**: has-patch
 
-## ⏳ Pending (9)
+## ⏳ Pending (10)
+
+- ⏳ [#64439](https://core.trac.wordpress.org/ticket/64439) - Add admin download functionality for themes in wp-admin
+  - **Component**: Themes | **Milestone**: Awaiting Review | **Status**: new
+  - **Focuses**: administration
+  - **Keywords**: has-patch 2nd-opinion needs-testing needs-unit-tests
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - Outlined buttons now have grey background
   - **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
@@ -58,4 +63,4 @@ All tickets where I provided testing contributions.
   - **Keywords**: has-patch good-first-bug needs-testing
 
 ---
-**Total Test Reports**: 10
+**Total Test Reports**: 11
