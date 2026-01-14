@@ -1,18 +1,18 @@
 {
-  "total": 12,
+  "total": 13,
   "props": 1,
   "merged": 2,
   "test_reports": 10,
   "release_7_0": 7,
-  "pending": 10,
+  "pending": 11,
   "focus_areas": {
+    "administration": 3,
     "css": 4,
     "performance": 2,
     "docs": 2,
     "coding-standards": 1,
     "ui": 4,
     "accessibility": 3,
-    "tests": 1,
-    "administration": 2
+    "tests": 1
   }
 }

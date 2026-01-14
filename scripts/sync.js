@@ -20,6 +20,7 @@ function writeFileIfChanged(filePath, content) {
 
 // Configuration
 const USERNAME = process.env.TRAC_USERNAME || 'noruzzaman';
+const GITHUB_USERNAME = process.env.GITHUB_USERNAME || 'noruzzamans';
 const TRAC_BASE_URL = 'https://core.trac.wordpress.org';
 
 // IMPORTANT: This URL shows ONLY tickets where user actually participated
@@ -100,6 +101,75 @@ async function fetchMyParticipatedTickets() {
     }
 
     return allTickets;
+}
+
+// Fetch PRs from GitHub and extract Trac ticket IDs
+async function fetchMyPrTickets() {
+    console.log(`🔍 Fetching PRs from GitHub for user ${GITHUB_USERNAME}...`);
+    const GITHUB_API_URL = `https://api.github.com/search/issues?q=repo:WordPress/wordpress-develop+author:${GITHUB_USERNAME}+type:pr`;
+    
+    const prTickets = [];
+
+    try {
+        const response = await fetch(GITHUB_API_URL, {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'Node.js Script'
+            }
+        });
+
+        if (!response.ok) throw new Error(`GitHub API failed: ${response.status}`);
+
+        const data = await response.json();
+        console.log(`   found ${data.total_count} PRs`);
+
+        for (const item of data.items) {
+            // Look for "Trac link", "Ticket", or #12345 in body
+            const body = item.body || '';
+            const title = item.title || '';
+            
+            // Regex to find Trac ticket IDs
+            // Common patterns: "Trac 12345", "Ticket #12345", "https://core.trac.wordpress.org/ticket/12345"
+            const tracUrlRegex = /core\.trac\.wordpress\.org\/ticket\/(\d+)/;
+            const tracTextRegex = /(?:Trac|Ticket)\s*#?(\d+)/i;
+            
+            let ticketId = null;
+
+            // Try URL match first
+            const urlMatch = body.match(tracUrlRegex);
+            if (urlMatch) {
+                ticketId = parseInt(urlMatch[1]);
+            } else {
+                // Try text match in title or body
+                const textMatch = title.match(tracTextRegex) || body.match(tracTextRegex);
+                if (textMatch) {
+                    ticketId = parseInt(textMatch[1]);
+                }
+            }
+
+            if (ticketId) {
+                console.log(`   👉 PR #${item.number} extracts to Trac #${ticketId}`);
+                prTickets.push({
+                    id: ticketId,
+                    title: title, // Use PR title as fallback
+                    component: 'Unknown', // Will be filled by fetchTicketDetails
+                    status: item.state,
+                    type: 'enhancement', // Default, will update later
+                    milestone: '',
+                    isPr: true,
+                    prNumber: item.number,
+                    prUrl: item.html_url
+                });
+            } else {
+                console.log(`   ⚠️ Could not extract Trac ID from PR #${item.number}`);
+            }
+        }
+        
+    } catch (error) {
+        console.error('   ❌ GitHub query failed:', error.message);
+    }
+
+    return prTickets;
 }
 
 // Fetch detailed ticket info
@@ -269,9 +339,24 @@ async function processAllTickets() {
     console.log('📥 Processing my participated tickets...\n');
 
     // Fetch ONLY tickets where I actually participated
-    const ticketList = await fetchMyParticipatedTickets();
+    // Fetch ONLY tickets where I actually participated
+    const tracTickets = await fetchMyParticipatedTickets();
+    const prTickets = await fetchMyPrTickets();
+
+    // Merge lists, unique by ID
+    const uniqueIds = new Set();
+    const ticketList = [];
+
+    // Prioritize Trac tickets
+    [...tracTickets, ...prTickets].forEach(t => {
+        if (!uniqueIds.has(t.id)) {
+            uniqueIds.add(t.id);
+            ticketList.push(t);
+        }
+    });
 
     if (ticketList.length === 0) {
+
         console.log('   No tickets found!');
         return [];
     }
@@ -289,11 +374,22 @@ async function processAllTickets() {
         const details = await fetchTicketDetails(basic.id);
 
         if (details) {
+            
+            // Special handling for PR-based contributions
+            if (basic.isPr && (details.contributionType === 'comment' || details.contributionType === 'unknown')) {
+                 // If it is a PR ticket, upgrade "comment" to "patch"
+                 details.contributionType = 'patch';
+                 console.log(`      ✨ Identified as PR/Patch contribution via PR #${basic.prNumber}`);
+            }
+
             tickets.push({
                 ...details,
                 component: details.component || basic.component,
                 milestone: details.milestone || basic.milestone,
-                type: basic.type
+                type: basic.type,
+                // Preserve PR info if available
+                prNumber: basic.prNumber,
+                prUrl: basic.prUrl
             });
         }
     }
@@ -318,9 +414,10 @@ async function processAllTickets() {
 
 // Get contribution type label
 function getTypeLabel(type) {
+
     const labels = {
         'test-report': '🧪 Test Report',
-        'patch': '📝 Patch',
+        'patch': '📝 Patch (PR)',
         'code-review': '👀 Code Review',
         'comment': '💬 Comment'
     };
