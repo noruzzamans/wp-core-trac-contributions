@@ -31,6 +31,7 @@ jobs:
       - name: Run sync script
         env:
           TRAC_USERNAME: noruzzaman
+          GITHUB_USERNAME: noruzzamans
         run: node sync.js
         working-directory: ./scripts
       
