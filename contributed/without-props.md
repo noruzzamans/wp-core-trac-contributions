@@ -4,14 +4,11 @@ Tickets where I contributed but haven't received props.
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
 
-## ⏳ Pending (11)
+## ⏳ Pending (10)
 
 These are still open - will get props once merged!
 
-- ⏳ [#64439](https://core.trac.wordpress.org/ticket/64439) - Add admin download functionality for themes in wp-admin
-  - **Type**: 📝 Patch (PR) | **Component**: Themes | **Milestone**: Awaiting Review | **Status**: new
-  - **Focuses**: administration
-  - **Keywords**: has-patch 2nd-opinion needs-testing needs-unit-tests
+
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - Outlined buttons now have grey background
   - **Type**: 🧪 Test Report | **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
@@ -73,5 +70,5 @@ These were merged but I didn't get props.
 ---
 | Status | Count |
 |--------|------:|
-| ⏳ Pending | 11 |
+| ⏳ Pending | 10 |
 | ❌ Merged (No Props) | 1 |

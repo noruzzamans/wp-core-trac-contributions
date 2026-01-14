@@ -1,6 +1,6 @@
 # My Trac Contributions
 
-Total **13** tickets where I participated.
+Total **12** tickets where I participated.
 
 > 📋 Source: [My Trac Comments](https://core.trac.wordpress.org/my-comments/all?USER=noruzzaman&max=200)
 
@@ -175,26 +175,15 @@ Total **13** tickets where I participated.
 
 ## Themes
 
-### 🔓 [#64439](https://core.trac.wordpress.org/ticket/64439)
-**Add admin download functionality for themes in wp-admin**
 
-| Field | Value |
-|-------|-------|
-| Contribution | 📝 Patch (PR) |
-| Props | ⏳ Pending |
-| Status | new |
-| Milestone | Awaiting Review |
-| Focuses | administration |
-| Keywords | has-patch 2nd-opinion needs-testing needs-unit-tests |
-| My Comments | 1 |
 
 ---
 ## 📊 Summary
 
 | Category | Count |
 |----------|------:|
-| 📝 Total Tickets | 13 |
+| 📝 Total Tickets | 12 |
 | ✅ Props Received | 1 |
 | 🔒 Merged/Fixed | 2 |
 | 🧪 Test Reports | 10 |
-| 📝 Patches | 1 |
+| 📝 Patches | 0 |
