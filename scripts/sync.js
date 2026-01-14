@@ -3,6 +3,21 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 const path = require('path');
 
+// Helper to write file only if changed
+function writeFileIfChanged(filePath, content) {
+    if (fs.existsSync(filePath)) {
+        const oldContent = fs.readFileSync(filePath, 'utf8');
+        // Ignore potential timestamp lines if needed, but for now strict equality is better than empty commits for EVERYTHING
+        // If the content is identical, skip writing
+        if (oldContent === content) {
+            console.log(`   ⏭️  No changes for ${path.basename(filePath)}`);
+            return;
+        }
+    }
+    fs.writeFileSync(filePath, content);
+    console.log(`   ✅ Updated ${path.basename(filePath)}`);
+}
+
 // Configuration
 const USERNAME = process.env.TRAC_USERNAME || 'noruzzaman';
 const TRAC_BASE_URL = 'https://core.trac.wordpress.org';
@@ -795,50 +810,50 @@ async function main() {
     console.log('\n📝 Generating markdown files...');
 
     // Generate and write all files
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(CONTRIBUTED_DIR, 'tickets.md'),
         generateContributedTickets(tickets)
     );
     console.log('   ✅ contributed/tickets.md');
 
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(CONTRIBUTED_DIR, 'test-reports.md'),
         generateTestReports(tickets)
     );
     console.log('   ✅ contributed/test-reports.md');
 
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(CONTRIBUTED_DIR, 'with-props.md'),
         generateWithProps(tickets)
     );
     console.log('   ✅ contributed/with-props.md');
 
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(CONTRIBUTED_DIR, 'without-props.md'),
         generateWithoutProps(tickets)
     );
     console.log('   ✅ contributed/without-props.md');
 
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(MERGED_DIR, 'tickets.md'),
         generateMergedTickets(tickets)
     );
     console.log('   ✅ merged/tickets.md');
 
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(RELEASE_DIR, 'tickets.md'),
         generate7ReleaseTickets(tickets)
     );
     console.log('   ✅ 7.0-release/tickets.md');
 
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(__dirname, '..', 'README.md'),
         updateReadme(tickets)
     );
     console.log('   ✅ README.md');
 
     // Write stats.json
-    fs.writeFileSync(
+    writeFileIfChanged(
         path.join(__dirname, '..', 'stats.json'),
         generateStatsJson(tickets)
     );
