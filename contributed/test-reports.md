@@ -16,12 +16,12 @@ All tickets where I provided testing contributions.
 - ⏳ [#64439](https://core.trac.wordpress.org/ticket/64439) - Add admin download functionality for themes in wp-admin
   - **Component**: Themes | **Milestone**: Awaiting Review | **Status**: new
   - **Focuses**: administration
-  - **Keywords**: has-patch 2nd-opinion needs-testing needs-unit-tests
+  - **Keywords**: 2nd-opinion needs-testing needs-unit-tests
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - Outlined buttons now have grey background
   - **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
   - **Focuses**: css, performance
-  - **Keywords**: has-patch has-unit-tests needs-testing
+  - **Keywords**: has-patch has-unit-tests has-screenshots dev-feedback
 
 - ⏳ [#64221](https://core.trac.wordpress.org/ticket/64221) - Reclassify `json2php` as a `devDependency`
   - **Component**: Build/Test Tools | **Milestone**: 7.0 | **Status**: reviewing
@@ -40,7 +40,7 @@ All tickets where I provided testing contributions.
 - ⏳ [#63697](https://core.trac.wordpress.org/ticket/63697) - Add OPCache to Site Health
   - **Component**: Site Health | **Milestone**: 7.0 | **Status**: reviewing
   - **Focuses**: performance
-  - **Keywords**: has-patch needs-testing
+  - **Keywords**: has-patch has-screenshots changes-requested
 
 - ⏳ [#63557](https://core.trac.wordpress.org/ticket/63557) - List Block Indentation Issue in Twenty Fifteen & Twenty Sixteen Themes
   - **Component**: Bundled Theme | **Milestone**: Awaiting Review | **Status**: new

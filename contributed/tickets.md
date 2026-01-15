@@ -155,7 +155,7 @@ Total **13** tickets where I participated.
 | Status | accepted |
 | Milestone | 6.9.1 |
 | Focuses | css, performance |
-| Keywords | has-patch has-unit-tests needs-testing |
+| Keywords | has-patch has-unit-tests has-screenshots dev-feedback |
 | My Comments | 1 |
 
 ## Site Health
@@ -170,7 +170,7 @@ Total **13** tickets where I participated.
 | Status | reviewing |
 | Milestone | 7.0 |
 | Focuses | performance |
-| Keywords | has-patch needs-testing |
+| Keywords | has-patch has-screenshots changes-requested |
 | My Comments | 1 |
 
 ## Themes
@@ -185,7 +185,7 @@ Total **13** tickets where I participated.
 | Status | new |
 | Milestone | Awaiting Review |
 | Focuses | administration |
-| Keywords | has-patch 2nd-opinion needs-testing needs-unit-tests |
+| Keywords | 2nd-opinion needs-testing needs-unit-tests |
 | My Comments | 2 |
 
 ---

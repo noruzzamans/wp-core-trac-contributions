@@ -87,7 +87,7 @@ My contributions targeting the WordPress 7.0 release.
 | Type | 🧪 Test Report |
 | Status | reviewing |
 | Focuses | performance |
-| Keywords | has-patch needs-testing |
+| Keywords | has-patch has-screenshots changes-requested |
 | Props | ⏳ Pending |
 
 ---

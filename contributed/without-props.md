@@ -11,12 +11,12 @@ These are still open - will get props once merged!
 - ⏳ [#64439](https://core.trac.wordpress.org/ticket/64439) - Add admin download functionality for themes in wp-admin
   - **Type**: 🧪 Test Report | **Component**: Themes | **Milestone**: Awaiting Review | **Status**: new
   - **Focuses**: administration
-  - **Keywords**: has-patch 2nd-opinion needs-testing needs-unit-tests
+  - **Keywords**: 2nd-opinion needs-testing needs-unit-tests
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - Outlined buttons now have grey background
   - **Type**: 🧪 Test Report | **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
   - **Focuses**: css, performance
-  - **Keywords**: has-patch has-unit-tests needs-testing
+  - **Keywords**: has-patch has-unit-tests has-screenshots dev-feedback
 
 - ⏳ [#64221](https://core.trac.wordpress.org/ticket/64221) - Reclassify `json2php` as a `devDependency`
   - **Type**: 🧪 Test Report | **Component**: Build/Test Tools | **Milestone**: 7.0 | **Status**: reviewing
@@ -35,7 +35,7 @@ These are still open - will get props once merged!
 - ⏳ [#63697](https://core.trac.wordpress.org/ticket/63697) - Add OPCache to Site Health
   - **Type**: 🧪 Test Report | **Component**: Site Health | **Milestone**: 7.0 | **Status**: reviewing
   - **Focuses**: performance
-  - **Keywords**: has-patch needs-testing
+  - **Keywords**: has-patch has-screenshots changes-requested
 
 - ⏳ [#63557](https://core.trac.wordpress.org/ticket/63557) - List Block Indentation Issue in Twenty Fifteen & Twenty Sixteen Themes
   - **Type**: 🧪 Test Report | **Component**: Bundled Theme | **Milestone**: Awaiting Review | **Status**: new
