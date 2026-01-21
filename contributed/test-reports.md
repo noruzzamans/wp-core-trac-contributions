@@ -50,7 +50,7 @@ All tickets where I provided testing contributions.
 - ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
   - **Component**: Bundled Theme | **Milestone**: 7.0 | **Status**: new
   - **Focuses**: accessibility
-  - **Keywords**: needs-design-feedback has-patch
+  - **Keywords**: has-patch commit
 
 - ⏳ [#43084](https://core.trac.wordpress.org/ticket/43084) - dashboard confuses published posts count with all posts
   - **Component**: Posts, Post Types | **Milestone**: 7.0 | **Status**: accepted

@@ -37,7 +37,7 @@ My contributions targeting the WordPress 7.0 release.
 | Type | 🧪 Test Report |
 | Status | new |
 | Focuses | accessibility |
-| Keywords | needs-design-feedback has-patch |
+| Keywords | has-patch commit |
 | Props | ⏳ Pending |
 
 ## General

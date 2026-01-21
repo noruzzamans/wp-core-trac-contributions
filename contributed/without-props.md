@@ -45,7 +45,7 @@ These are still open - will get props once merged!
 - ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
   - **Type**: 🧪 Test Report | **Component**: Bundled Theme | **Milestone**: 7.0 | **Status**: new
   - **Focuses**: accessibility
-  - **Keywords**: needs-design-feedback has-patch
+  - **Keywords**: has-patch commit
 
 - ⏳ [#62028](https://core.trac.wordpress.org/ticket/62028) - Paragraph margins not honored
   - **Type**: 💬 Comment | **Component**: Editor | **Status**: closed

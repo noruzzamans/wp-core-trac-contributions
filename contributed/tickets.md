@@ -71,7 +71,7 @@ Total **13** tickets where I participated.
 | Status | new |
 | Milestone | 7.0 |
 | Focuses | accessibility |
-| Keywords | needs-design-feedback has-patch |
+| Keywords | has-patch commit |
 | My Comments | 1 |
 
 ## Editor
