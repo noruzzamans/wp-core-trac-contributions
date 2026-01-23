@@ -16,7 +16,7 @@ All tickets where I provided testing contributions.
 - ⏳ [#64439](https://core.trac.wordpress.org/ticket/64439) - Add admin download functionality for themes in wp-admin
   - **Component**: Themes | **Milestone**: Awaiting Review | **Status**: new
   - **Focuses**: administration
-  - **Keywords**: 2nd-opinion needs-testing needs-unit-tests
+  - **Keywords**: 2nd-opinion needs-unit-tests
 
 - ⏳ [#64354](https://core.trac.wordpress.org/ticket/64354) - Outlined buttons now have grey background
   - **Component**: Script Loader | **Milestone**: 6.9.1 | **Status**: accepted
@@ -35,7 +35,7 @@ All tickets where I provided testing contributions.
 - ⏳ [#63935](https://core.trac.wordpress.org/ticket/63935) - Grid block background causes inconsistent padding on frontend
   - **Component**: Bundled Theme | **Milestone**: Awaiting Review | **Status**: new
   - **Focuses**: ui, css
-  - **Keywords**: needs-patch dev-feedback 2nd-opinion needs-testing
+  - **Keywords**: needs-patch dev-feedback 2nd-opinion reporter-feedback
 
 - ⏳ [#63697](https://core.trac.wordpress.org/ticket/63697) - Add OPCache to Site Health
   - **Component**: Site Health | **Milestone**: 7.0 | **Status**: reviewing

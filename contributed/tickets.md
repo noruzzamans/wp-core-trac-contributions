@@ -45,7 +45,7 @@ Total **13** tickets where I participated.
 | Status | new |
 | Milestone | Awaiting Review |
 | Focuses | ui, css |
-| Keywords | needs-patch dev-feedback 2nd-opinion needs-testing |
+| Keywords | needs-patch dev-feedback 2nd-opinion reporter-feedback |
 | My Comments | 1 |
 
 ### 🔓 [#63557](https://core.trac.wordpress.org/ticket/63557)
@@ -185,7 +185,7 @@ Total **13** tickets where I participated.
 | Status | new |
 | Milestone | Awaiting Review |
 | Focuses | administration |
-| Keywords | 2nd-opinion needs-testing needs-unit-tests |
+| Keywords | 2nd-opinion needs-unit-tests |
 | My Comments | 6 |
 
 ---
