@@ -42,10 +42,10 @@ Personal tracking for my WordPress Core Trac contributions.
 
 | Metric | Count |
 |:-------|------:|
-| [📝 Total](./contributed/tickets.md) | 20 |
+| [📝 Total](./contributed/tickets.md) | 15 |
 | [✅ Props](./contributed/with-props.md) | 4 |
-| [🔒 Merged](./merged/tickets.md) | 7 |
-| [⏳ Pending](./contributed/without-props.md) | 13 |
+| [🔒 Merged](./merged/tickets.md) | 4 |
+| [⏳ Pending](./contributed/without-props.md) | 11 |
 
 </td>
 <td width="33.33%" valign="top">
@@ -54,16 +54,16 @@ Personal tracking for my WordPress Core Trac contributions.
 |:-------|------:|
 | [🧪 Test Reports](./contributed/test-reports.md) | 11 |
 | 📝 Patches | 0 |
-| 💬 Comments | 9 |
+| 💬 Comments | 4 |
 
 </td>
 <td width="33.34%" valign="top">
 
 | Metric | Value |
 |:-------|:------|
-| 📈 Props Rate | **57%** |
+| 📈 Props Rate | **100%** |
 | 🎯 7.0 Tickets | **8** |
-| 🔥 Active | **13** pending |
+| 🔥 Active | **11** pending |
 | ⭐ Success | **4** props |
 
 </td>

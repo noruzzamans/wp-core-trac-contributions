@@ -30,6 +30,13 @@ const MY_COMMENTS_URL = `${TRAC_BASE_URL}/my-comments/all?USER=${USERNAME}&max=2
 // Trac Search URL - finds ALL changesets where user got props
 const PROPS_SEARCH_URL = `${TRAC_BASE_URL}/search?q=props+${USERNAME}&noquickjump=1&changeset=on`;
 
+// MANUAL: Tickets where I contributed via GitHub PRs but didn't comment on Trac directly
+// Add ticket IDs here if you contributed via GitHub but it doesn't show in my-comments
+const MANUAL_TICKETS = [
+    64224,  // Docblock improvements for 7.0 - Contributed via PR review
+    62103,  // Import Twenty Twenty-Five - Got props in changeset 59146
+];
+
 // Paths
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTRIBUTED_DIR = path.join(ROOT_DIR, 'contributed');
@@ -142,7 +149,7 @@ async function fetchMyPropsChangesets() {
 
         console.log(`   ✅ Found ${propsData.changesets.length} changesets with props`);
 
-        // For each changeset, fetch and find related ticket
+        // For each changeset, fetch and find related ticket + store mapping
         for (const csId of propsData.changesets) {
             try {
                 const csUrl = `${TRAC_BASE_URL}/changeset/${csId}`;
@@ -150,7 +157,6 @@ async function fetchMyPropsChangesets() {
                     headers: { 'User-Agent': 'Mozilla/5.0' }
                 });
                 const csHtml = await csResponse.text();
-                const cs$ = cheerio.load(csHtml);
 
                 // Find ticket references (Fixes #12345, See #12345)
                 const ticketMatches = csHtml.match(/#(\d{4,6})/g) || [];
@@ -158,6 +164,13 @@ async function fetchMyPropsChangesets() {
                     const ticketId = parseInt(match.replace('#', ''));
                     if (ticketId > 1000) { // Filter out small numbers
                         propsData.ticketIds.add(ticketId);
+                        // Store ticket -> changeset mapping (first one wins)
+                        if (!propsData.ticketToChangeset) {
+                            propsData.ticketToChangeset = {};
+                        }
+                        if (!propsData.ticketToChangeset[ticketId]) {
+                            propsData.ticketToChangeset[ticketId] = csId;
+                        }
                     }
                 });
 
@@ -357,41 +370,23 @@ async function fetchTicketDetails(ticketId) {
         });
 
         // SMART APPROACH: Check props directly from ticket page HTML
-        // This handles 100+ changesets without fetching each one
+        // Look for "Props ... username" pattern in changeset comments only
         let hasProps = false;
         let propsChangeset = null;
 
-        // Search for "Props ... username" pattern in ticket page
-        // Changeset comments on ticket page contain the props line
-        const pageHtml = html.toLowerCase();
-        const username = USERNAME.toLowerCase();
+        // Search for actual "Props" line pattern (not just username anywhere)
+        // Format: "Props username1, username2, username3."
+        const propsLineRegex = /props\s+[\w\s,]+/gi;
+        const propsMatches = html.match(propsLineRegex) || [];
 
-        // Look for props patterns in the page
-        const propsPatterns = [
-            `props ${username}`,
-            `props ${username},`,
-            `props ${username}.`,
-            `, ${username},`,
-            `, ${username}.`,
-            `, ${username} `,
-            ` ${username},`,
-            ` ${username}.`
-        ];
-
-        for (const pattern of propsPatterns) {
-            if (pageHtml.includes(pattern)) {
+        for (const propsLine of propsMatches) {
+            // Check if this specific props line contains our username
+            if (propsLine.toLowerCase().includes(USERNAME.toLowerCase())) {
                 hasProps = true;
-                // Try to find which changeset
+                // Try to find the associated changeset
                 for (const csId of changesets) {
-                    // Check if this changeset section contains the username
-                    const csPattern = new RegExp(`changeset/${csId}[^]*?props[^]*?${username}`, 'i');
-                    if (html.match(csPattern)) {
-                        propsChangeset = csId;
-                        break;
-                    }
-                }
-                if (!propsChangeset && changesets.length > 0) {
-                    propsChangeset = changesets[0]; // Fallback to first changeset
+                    propsChangeset = csId;
+                    break;
                 }
                 break;
             }
@@ -446,22 +441,25 @@ async function processAllTickets() {
         }
     });
 
-    // Add tickets discovered from props search (BEST SOURCE!)
-    for (const propsTicketId of propsData.ticketIds) {
-        if (!uniqueIds.has(propsTicketId)) {
-            uniqueIds.add(propsTicketId);
+    // Add manual tickets (verified contributions via GitHub PRs)
+    for (const manualId of MANUAL_TICKETS) {
+        if (!uniqueIds.has(manualId)) {
+            uniqueIds.add(manualId);
             ticketList.push({
-                id: propsTicketId,
-                title: `Ticket #${propsTicketId}`,
+                id: manualId,
+                title: `Ticket #${manualId}`,
                 component: 'Unknown',
                 status: 'open',
                 type: 'task',
                 milestone: '',
-                fromProps: true  // Mark as discovered from props
+                isManual: true
             });
-            console.log(`   ➕ Added ticket #${propsTicketId} (from props search)`);
+            console.log(`   ➕ Added manual ticket #${manualId}`);
         }
     }
+
+    // Props changeset mapping info
+    console.log(`   📋 Props changeset mapping available for ${Object.keys(propsData.ticketToChangeset || {}).length} tickets`);
 
     if (ticketList.length === 0) {
 
@@ -488,6 +486,13 @@ async function processAllTickets() {
                 // If it is a PR ticket, upgrade "comment" to "patch"
                 details.contributionType = 'patch';
                 console.log(`      ✨ Identified as PR/Patch contribution via PR #${basic.prNumber}`);
+            }
+
+            // Override props info from propsData if this ticket got props
+            if (propsData.ticketToChangeset && propsData.ticketToChangeset[basic.id]) {
+                details.hasProps = true;
+                details.propsChangeset = propsData.ticketToChangeset[basic.id];
+                console.log(`      ✅ Props confirmed from changeset ${details.propsChangeset}`);
             }
 
             tickets.push({

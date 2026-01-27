@@ -1,6 +1,6 @@
 # My Trac Contributions
 
-Total **20** tickets where I participated.
+Total **15** tickets where I participated.
 
 > 📋 Source: [My Trac Comments](https://core.trac.wordpress.org/my-comments/all?USER=noruzzaman&max=200)
 
@@ -98,18 +98,6 @@ Total **20** tickets where I participated.
 | Keywords | has-test-info reporter-feedback |
 | My Comments | 1 |
 
-## Embeds
-
-### 🔓 [#40464](https://core.trac.wordpress.org/ticket/40464)
-**Embed video in Wordpress gives W3c Markup Validation issue**
-
-| Field | Value |
-|-------|-------|
-| Contribution | 💬 Comment |
-| Props | ⏳ Pending |
-| Status | new |
-| Milestone | Awaiting Review |
-
 ## General
 
 ### 🔒 [#64262](https://core.trac.wordpress.org/ticket/64262)
@@ -151,16 +139,6 @@ Total **20** tickets where I participated.
 | Keywords | has-patch has-test-info |
 | My Comments | 1 |
 
-### 🔒 [#32444](https://core.trac.wordpress.org/ticket/32444)
-**Scrutinizer in 4.3**
-
-| Field | Value |
-|-------|-------|
-| Contribution | 💬 Comment |
-| Props | ❌ Not Given |
-| Status | closed ((fixed)) |
-| Milestone | 4.3 |
-
 ### 🔓 [#29798](https://core.trac.wordpress.org/ticket/29798)
 **unified theme and plugin uploader**
 
@@ -173,38 +151,6 @@ Total **20** tickets where I participated.
 | Focuses | administration |
 | Keywords | has-patch good-first-bug needs-testing |
 | My Comments | 1 |
-
-### 🔒 [#5300](https://core.trac.wordpress.org/ticket/5300)
-**User registration time not being saved**
-
-| Field | Value |
-|-------|-------|
-| Contribution | 💬 Comment |
-| Props | ❌ Not Given |
-| Status | closed ((fixed)) |
-| Milestone | 2.5 |
-| Keywords | has-patch commit |
-
-### 🔓 [#3858](https://core.trac.wordpress.org/ticket/3858)
-**unclosed apply_filters() in /wp-includes/feed.php**
-
-| Field | Value |
-|-------|-------|
-| Contribution | 💬 Comment |
-| Props | ⏳ Pending |
-| Status | closed ((duplicate)) |
-
-## Media
-
-### 🔒 [#23282](https://core.trac.wordpress.org/ticket/23282)
-**Add shortcodes for inline HTML5 audio / video**
-
-| Field | Value |
-|-------|-------|
-| Contribution | 💬 Comment |
-| Props | ❌ Not Given |
-| Status | closed ((fixed)) |
-| Milestone | 3.6 |
 
 ## Posts, Post Types
 
@@ -271,8 +217,8 @@ Total **20** tickets where I participated.
 
 | Category | Count |
 |----------|------:|
-| 📝 Total Tickets | 20 |
+| 📝 Total Tickets | 15 |
 | ✅ Props Received | 4 |
-| 🔒 Merged/Fixed | 7 |
+| 🔒 Merged/Fixed | 4 |
 | 🧪 Test Reports | 11 |
 | 📝 Patches | 0 |

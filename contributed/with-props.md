@@ -9,7 +9,7 @@ Tickets where I contributed and received props in the changeset.
   - **Component**: General | **Milestone**: 7.0
   - **Focuses**: coding-standards
   - **Keywords**: has-patch
-  - **Changeset**: [61270](https://core.trac.wordpress.org/changeset/61270)
+  - **Changeset**: [61521](https://core.trac.wordpress.org/changeset/61521)
 
 - ✅ [#64211](https://core.trac.wordpress.org/ticket/64211) - Twenty Eleven: Improve PHP DocBlock compliance with WordPress Documentation Standards
   - **Contribution**: 🧪 Test Report

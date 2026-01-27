@@ -26,7 +26,7 @@ Tickets that have been merged/fixed in WordPress Core.
   - **Keywords**: has-patch
   - **Changeset**: [59146](https://core.trac.wordpress.org/changeset/59146)
 
-## ❌ Merged without Props (4)
+## ❌ Merged without Props (1)
 
 - ❌ [#64262](https://core.trac.wordpress.org/ticket/64262) - Coding Standards: Fix improper @return tag documentation across core files
   - **Contribution**: 👀 Code Review
@@ -34,18 +34,5 @@ Tickets that have been merged/fixed in WordPress Core.
   - **Focuses**: docs, coding-standards
   - **Keywords**: has-patch
 
-- ❌ [#32444](https://core.trac.wordpress.org/ticket/32444) - Scrutinizer in 4.3
-  - **Contribution**: 💬 Comment
-  - **Component**: General | **Milestone**: 4.3
-
-- ❌ [#23282](https://core.trac.wordpress.org/ticket/23282) - Add shortcodes for inline HTML5 audio / video
-  - **Contribution**: 💬 Comment
-  - **Component**: Media | **Milestone**: 3.6
-
-- ❌ [#5300](https://core.trac.wordpress.org/ticket/5300) - User registration time not being saved
-  - **Contribution**: 💬 Comment
-  - **Component**: General | **Milestone**: 2.5
-  - **Keywords**: has-patch commit
-
 ---
-**Total Merged**: 7 | ✅ With Props: 3
+**Total Merged**: 4 | ✅ With Props: 3
