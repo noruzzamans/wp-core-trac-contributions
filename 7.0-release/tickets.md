@@ -29,16 +29,16 @@ My contributions targeting the WordPress 7.0 release.
 | Keywords | has-patch |
 | Props | ✅ Received |
 
-### ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982)
+### ✅ [#62982](https://core.trac.wordpress.org/ticket/62982)
 **Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations**
 
 | Field | Value |
 |-------|-------|
 | Type | 🧪 Test Report |
-| Status | new |
+| Status | closed |
 | Focuses | accessibility |
 | Keywords | has-patch commit |
-| Props | ⏳ Pending |
+| Props | ✅ Received |
 
 ## General
 
@@ -94,7 +94,7 @@ My contributions targeting the WordPress 7.0 release.
 ## Summary
 | Status | Count |
 |--------|------:|
-| ✅ Props | 1 |
-| ⏳ Pending | 5 |
+| ✅ Props | 2 |
+| ⏳ Pending | 4 |
 | ❌ Merged (No Props) | 1 |
 | **Total** | **7** |

@@ -4,14 +4,19 @@ All tickets where I provided testing contributions.
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
 
-## ✅ Props Received (1)
+## ✅ Props Received (2)
 
 - ✅ [#64211](https://core.trac.wordpress.org/ticket/64211) - Twenty Eleven: Improve PHP DocBlock compliance with WordPress Documentation Standards
   - **Component**: Bundled Theme | **Milestone**: 7.0
   - **Focuses**: docs
   - **Keywords**: has-patch
 
-## ⏳ Pending (10)
+- ✅ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
+  - **Component**: Bundled Theme | **Milestone**: 7.0
+  - **Focuses**: accessibility
+  - **Keywords**: has-patch commit
+
+## ⏳ Pending (9)
 
 - ⏳ [#64439](https://core.trac.wordpress.org/ticket/64439) - Add admin download functionality for themes in wp-admin
   - **Component**: Themes | **Milestone**: Awaiting Review | **Status**: new
@@ -46,11 +51,6 @@ All tickets where I provided testing contributions.
   - **Component**: Bundled Theme | **Milestone**: Awaiting Review | **Status**: new
   - **Focuses**: ui, css, tests
   - **Keywords**: dev-feedback
-
-- ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
-  - **Component**: Bundled Theme | **Milestone**: 7.0 | **Status**: new
-  - **Focuses**: accessibility
-  - **Keywords**: has-patch commit
 
 - ⏳ [#43084](https://core.trac.wordpress.org/ticket/43084) - dashboard confuses published posts count with all posts
   - **Component**: Posts, Post Types | **Milestone**: 7.0 | **Status**: accepted

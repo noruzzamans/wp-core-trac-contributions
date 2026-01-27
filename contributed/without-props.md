@@ -4,7 +4,7 @@ Tickets where I contributed but haven't received props.
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
 
-## ⏳ Pending (11)
+## ⏳ Pending (10)
 
 These are still open - will get props once merged!
 
@@ -42,11 +42,6 @@ These are still open - will get props once merged!
   - **Focuses**: ui, css, tests
   - **Keywords**: dev-feedback
 
-- ⏳ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
-  - **Type**: 🧪 Test Report | **Component**: Bundled Theme | **Milestone**: 7.0 | **Status**: new
-  - **Focuses**: accessibility
-  - **Keywords**: has-patch commit
-
 - ⏳ [#62028](https://core.trac.wordpress.org/ticket/62028) - Paragraph margins not honored
   - **Type**: 💬 Comment | **Component**: Editor | **Status**: closed
   - **Keywords**: has-test-info reporter-feedback
@@ -73,5 +68,5 @@ These were merged but I didn't get props.
 ---
 | Status | Count |
 |--------|------:|
-| ⏳ Pending | 11 |
+| ⏳ Pending | 10 |
 | ❌ Merged (No Props) | 1 |

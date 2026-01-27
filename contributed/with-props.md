@@ -11,5 +11,12 @@ Tickets where I contributed and received props in the changeset.
   - **Keywords**: has-patch
   - **Changeset**: [61309](https://core.trac.wordpress.org/changeset/61309)
 
+- ✅ [#62982](https://core.trac.wordpress.org/ticket/62982) - Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations
+  - **Contribution**: 🧪 Test Report
+  - **Component**: Bundled Theme | **Milestone**: 7.0
+  - **Focuses**: accessibility
+  - **Keywords**: has-patch commit
+  - **Changeset**: [61534](https://core.trac.wordpress.org/changeset/61534)
+
 ---
-**Total Props Received**: 1
+**Total Props Received**: 2

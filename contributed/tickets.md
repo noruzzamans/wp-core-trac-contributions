@@ -61,14 +61,14 @@ Total **13** tickets where I participated.
 | Keywords | dev-feedback |
 | My Comments | 1 |
 
-### 🔓 [#62982](https://core.trac.wordpress.org/ticket/62982)
+### 🔒 [#62982](https://core.trac.wordpress.org/ticket/62982)
 **Twenty Twenty-Five: The Written by pattern on single posts has too low color contrast in some variations**
 
 | Field | Value |
 |-------|-------|
 | Contribution | 🧪 Test Report |
-| Props | ⏳ Pending |
-| Status | new |
+| Props | ✅ Received |
+| Status | closed ((fixed)) |
 | Milestone | 7.0 |
 | Focuses | accessibility |
 | Keywords | has-patch commit |
@@ -194,7 +194,7 @@ Total **13** tickets where I participated.
 | Category | Count |
 |----------|------:|
 | 📝 Total Tickets | 13 |
-| ✅ Props Received | 1 |
-| 🔒 Merged/Fixed | 2 |
+| ✅ Props Received | 2 |
+| 🔒 Merged/Fixed | 3 |
 | 🧪 Test Reports | 11 |
 | 📝 Patches | 0 |
