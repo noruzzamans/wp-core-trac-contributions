@@ -53,6 +53,17 @@ My contributions targeting the WordPress 7.0 release.
 | Keywords | has-patch |
 | Props | ❌ Not Given |
 
+### ✅ [#64224](https://core.trac.wordpress.org/ticket/64224)
+**Docblock improvements for 7.0**
+
+| Field | Value |
+|-------|-------|
+| Type | 💬 Comment |
+| Status | new |
+| Focuses | coding-standards |
+| Keywords | has-patch |
+| Props | ✅ Received |
+
 ### ⏳ [#64065](https://core.trac.wordpress.org/ticket/64065)
 **Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.**
 
@@ -94,7 +105,7 @@ My contributions targeting the WordPress 7.0 release.
 ## Summary
 | Status | Count |
 |--------|------:|
-| ✅ Props | 2 |
+| ✅ Props | 3 |
 | ⏳ Pending | 4 |
 | ❌ Merged (No Props) | 1 |
-| **Total** | **7** |
+| **Total** | **8** |

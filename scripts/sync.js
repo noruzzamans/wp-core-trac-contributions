@@ -27,6 +27,9 @@ const TRAC_BASE_URL = 'https://core.trac.wordpress.org';
 // NOT tickets where others mentioned the user's name
 const MY_COMMENTS_URL = `${TRAC_BASE_URL}/my-comments/all?USER=${USERNAME}&max=200`;
 
+// Trac Search URL - finds ALL changesets where user got props
+const PROPS_SEARCH_URL = `${TRAC_BASE_URL}/search?q=props+${USERNAME}&noquickjump=1&changeset=on`;
+
 // Paths
 const ROOT_DIR = path.join(__dirname, '..');
 const CONTRIBUTED_DIR = path.join(ROOT_DIR, 'contributed');
@@ -103,11 +106,84 @@ async function fetchMyParticipatedTickets() {
     return allTickets;
 }
 
+// BEST APPROACH: Fetch ALL changesets where user got props via Trac Search
+async function fetchMyPropsChangesets() {
+    console.log(`🔍 Searching Trac for ALL changesets with props ${USERNAME}...`);
+    console.log(`   URL: ${PROPS_SEARCH_URL}`);
+
+    const propsData = {
+        changesets: [],
+        ticketIds: new Set()
+    };
+
+    try {
+        const response = await fetch(PROPS_SEARCH_URL, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
+        });
+
+        if (!response.ok) throw new Error(`Trac search failed: ${response.status}`);
+
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
+        // Find all changeset links in search results
+        $('a[href*="/changeset/"]').each((i, el) => {
+            const href = $(el).attr('href');
+            const match = href.match(/changeset\/(\d+)/);
+            if (match) {
+                const csId = match[1];
+                if (!propsData.changesets.includes(csId)) {
+                    propsData.changesets.push(csId);
+                }
+            }
+        });
+
+        console.log(`   ✅ Found ${propsData.changesets.length} changesets with props`);
+
+        // For each changeset, fetch and find related ticket
+        for (const csId of propsData.changesets) {
+            try {
+                const csUrl = `${TRAC_BASE_URL}/changeset/${csId}`;
+                const csResponse = await fetch(csUrl, {
+                    headers: { 'User-Agent': 'Mozilla/5.0' }
+                });
+                const csHtml = await csResponse.text();
+                const cs$ = cheerio.load(csHtml);
+
+                // Find ticket references (Fixes #12345, See #12345)
+                const ticketMatches = csHtml.match(/#(\d{4,6})/g) || [];
+                ticketMatches.forEach(match => {
+                    const ticketId = parseInt(match.replace('#', ''));
+                    if (ticketId > 1000) { // Filter out small numbers
+                        propsData.ticketIds.add(ticketId);
+                    }
+                });
+
+                console.log(`   📝 Changeset ${csId} -> Tickets: ${ticketMatches.slice(0, 3).join(', ')}`);
+            } catch (e) {
+                console.log(`   ⚠️ Could not fetch changeset ${csId}`);
+            }
+
+            // Small delay
+            await new Promise(resolve => setTimeout(resolve, 200));
+        }
+
+        console.log(`   ✅ Total tickets from props: ${propsData.ticketIds.size}`);
+
+    } catch (error) {
+        console.error('   ❌ Props search failed:', error.message);
+    }
+
+    return propsData;
+}
+
 // Fetch PRs from GitHub and extract Trac ticket IDs
 async function fetchMyPrTickets() {
     console.log(`🔍 Fetching PRs from GitHub for user ${GITHUB_USERNAME}...`);
     const GITHUB_API_URL = `https://api.github.com/search/issues?q=repo:WordPress/wordpress-develop+author:${GITHUB_USERNAME}+type:pr`;
-    
+
     const prTickets = [];
 
     try {
@@ -127,12 +203,12 @@ async function fetchMyPrTickets() {
             // Look for "Trac link", "Ticket", or #12345 in body
             const body = item.body || '';
             const title = item.title || '';
-            
+
             // Regex to find Trac ticket IDs
             // Common patterns: "Trac 12345", "Ticket #12345", "https://core.trac.wordpress.org/ticket/12345"
             const tracUrlRegex = /core\.trac\.wordpress\.org\/ticket\/(\d+)/;
             const tracTextRegex = /(?:Trac|Ticket)\s*#?(\d+)/i;
-            
+
             let ticketId = null;
 
             // Try URL match first
@@ -164,7 +240,7 @@ async function fetchMyPrTickets() {
                 console.log(`   ⚠️ Could not extract Trac ID from PR #${item.number}`);
             }
         }
-        
+
     } catch (error) {
         console.error('   ❌ GitHub query failed:', error.message);
     }
@@ -280,29 +356,44 @@ async function fetchTicketDetails(ticketId) {
             }
         });
 
-        // Check props in changesets
+        // SMART APPROACH: Check props directly from ticket page HTML
+        // This handles 100+ changesets without fetching each one
         let hasProps = false;
         let propsChangeset = null;
 
-        for (const changesetId of changesets.slice(0, 5)) {
-            try {
-                const csUrl = `${TRAC_BASE_URL}/changeset/${changesetId}`;
-                const csResponse = await fetch(csUrl, {
-                    headers: { 'User-Agent': 'Mozilla/5.0' }
-                });
-                const csHtml = await csResponse.text();
+        // Search for "Props ... username" pattern in ticket page
+        // Changeset comments on ticket page contain the props line
+        const pageHtml = html.toLowerCase();
+        const username = USERNAME.toLowerCase();
 
-                // Check if username appears in props
-                if (csHtml.toLowerCase().includes(`props ${USERNAME.toLowerCase()}`) ||
-                    csHtml.toLowerCase().includes(`props to ${USERNAME.toLowerCase()}`) ||
-                    csHtml.toLowerCase().includes(`, ${USERNAME.toLowerCase()}`) ||
-                    csHtml.toLowerCase().includes(`${USERNAME.toLowerCase()},`)) {
-                    hasProps = true;
-                    propsChangeset = changesetId;
-                    break;
+        // Look for props patterns in the page
+        const propsPatterns = [
+            `props ${username}`,
+            `props ${username},`,
+            `props ${username}.`,
+            `, ${username},`,
+            `, ${username}.`,
+            `, ${username} `,
+            ` ${username},`,
+            ` ${username}.`
+        ];
+
+        for (const pattern of propsPatterns) {
+            if (pageHtml.includes(pattern)) {
+                hasProps = true;
+                // Try to find which changeset
+                for (const csId of changesets) {
+                    // Check if this changeset section contains the username
+                    const csPattern = new RegExp(`changeset/${csId}[^]*?props[^]*?${username}`, 'i');
+                    if (html.match(csPattern)) {
+                        propsChangeset = csId;
+                        break;
+                    }
                 }
-            } catch (e) {
-                // Ignore changeset check errors
+                if (!propsChangeset && changesets.length > 0) {
+                    propsChangeset = changesets[0]; // Fallback to first changeset
+                }
+                break;
             }
         }
 
@@ -338,22 +429,39 @@ async function fetchTicketDetails(ticketId) {
 async function processAllTickets() {
     console.log('📥 Processing my participated tickets...\n');
 
-    // Fetch ONLY tickets where I actually participated
-    // Fetch ONLY tickets where I actually participated
+    // Fetch tickets from different sources
     const tracTickets = await fetchMyParticipatedTickets();
     const prTickets = await fetchMyPrTickets();
+    const propsData = await fetchMyPropsChangesets();
 
     // Merge lists, unique by ID
     const uniqueIds = new Set();
     const ticketList = [];
 
-    // Prioritize Trac tickets
+    // Add Trac tickets first
     [...tracTickets, ...prTickets].forEach(t => {
         if (!uniqueIds.has(t.id)) {
             uniqueIds.add(t.id);
             ticketList.push(t);
         }
     });
+
+    // Add tickets discovered from props search (BEST SOURCE!)
+    for (const propsTicketId of propsData.ticketIds) {
+        if (!uniqueIds.has(propsTicketId)) {
+            uniqueIds.add(propsTicketId);
+            ticketList.push({
+                id: propsTicketId,
+                title: `Ticket #${propsTicketId}`,
+                component: 'Unknown',
+                status: 'open',
+                type: 'task',
+                milestone: '',
+                fromProps: true  // Mark as discovered from props
+            });
+            console.log(`   ➕ Added ticket #${propsTicketId} (from props search)`);
+        }
+    }
 
     if (ticketList.length === 0) {
 
@@ -374,12 +482,12 @@ async function processAllTickets() {
         const details = await fetchTicketDetails(basic.id);
 
         if (details) {
-            
+
             // Special handling for PR-based contributions
             if (basic.isPr && (details.contributionType === 'comment' || details.contributionType === 'unknown')) {
-                 // If it is a PR ticket, upgrade "comment" to "patch"
-                 details.contributionType = 'patch';
-                 console.log(`      ✨ Identified as PR/Patch contribution via PR #${basic.prNumber}`);
+                // If it is a PR ticket, upgrade "comment" to "patch"
+                details.contributionType = 'patch';
+                console.log(`      ✨ Identified as PR/Patch contribution via PR #${basic.prNumber}`);
             }
 
             tickets.push({

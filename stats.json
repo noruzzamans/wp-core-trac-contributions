@@ -1,16 +1,16 @@
 {
-  "total": 13,
-  "props": 2,
-  "merged": 3,
+  "total": 20,
+  "props": 4,
+  "merged": 7,
   "test_reports": 11,
-  "release_7_0": 7,
-  "pending": 10,
+  "release_7_0": 8,
+  "pending": 13,
   "focus_areas": {
     "administration": 3,
     "css": 4,
     "performance": 2,
     "docs": 2,
-    "coding-standards": 1,
+    "coding-standards": 2,
     "ui": 4,
     "accessibility": 3,
     "tests": 1

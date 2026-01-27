@@ -1,6 +1,6 @@
 # My Trac Contributions
 
-Total **13** tickets where I participated.
+Total **20** tickets where I participated.
 
 > 📋 Source: [My Trac Comments](https://core.trac.wordpress.org/my-comments/all?USER=noruzzaman&max=200)
 
@@ -74,6 +74,17 @@ Total **13** tickets where I participated.
 | Keywords | has-patch commit |
 | My Comments | 1 |
 
+### 🔒 [#62103](https://core.trac.wordpress.org/ticket/62103)
+**Import Twenty Twenty-Five**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 💬 Comment |
+| Props | ✅ Received |
+| Status | closed ((fixed)) |
+| Milestone | 6.7 |
+| Keywords | has-patch |
+
 ## Editor
 
 ### 🔓 [#62028](https://core.trac.wordpress.org/ticket/62028)
@@ -86,6 +97,18 @@ Total **13** tickets where I participated.
 | Status | closed ((invalid)) |
 | Keywords | has-test-info reporter-feedback |
 | My Comments | 1 |
+
+## Embeds
+
+### 🔓 [#40464](https://core.trac.wordpress.org/ticket/40464)
+**Embed video in Wordpress gives W3c Markup Validation issue**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 💬 Comment |
+| Props | ⏳ Pending |
+| Status | new |
+| Milestone | Awaiting Review |
 
 ## General
 
@@ -102,6 +125,19 @@ Total **13** tickets where I participated.
 | Keywords | has-patch |
 | My Comments | 1 |
 
+### 🔓 [#64224](https://core.trac.wordpress.org/ticket/64224)
+**Docblock improvements for 7.0**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 💬 Comment |
+| Props | ✅ Received |
+| Status | new |
+| Milestone | 7.0 |
+| Focuses | coding-standards |
+| Keywords | has-patch |
+| My Comments | 2 |
+
 ### 🔓 [#64065](https://core.trac.wordpress.org/ticket/64065)
 **Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.**
 
@@ -115,6 +151,16 @@ Total **13** tickets where I participated.
 | Keywords | has-patch has-test-info |
 | My Comments | 1 |
 
+### 🔒 [#32444](https://core.trac.wordpress.org/ticket/32444)
+**Scrutinizer in 4.3**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 💬 Comment |
+| Props | ❌ Not Given |
+| Status | closed ((fixed)) |
+| Milestone | 4.3 |
+
 ### 🔓 [#29798](https://core.trac.wordpress.org/ticket/29798)
 **unified theme and plugin uploader**
 
@@ -127,6 +173,38 @@ Total **13** tickets where I participated.
 | Focuses | administration |
 | Keywords | has-patch good-first-bug needs-testing |
 | My Comments | 1 |
+
+### 🔒 [#5300](https://core.trac.wordpress.org/ticket/5300)
+**User registration time not being saved**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 💬 Comment |
+| Props | ❌ Not Given |
+| Status | closed ((fixed)) |
+| Milestone | 2.5 |
+| Keywords | has-patch commit |
+
+### 🔓 [#3858](https://core.trac.wordpress.org/ticket/3858)
+**unclosed apply_filters() in /wp-includes/feed.php**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 💬 Comment |
+| Props | ⏳ Pending |
+| Status | closed ((duplicate)) |
+
+## Media
+
+### 🔒 [#23282](https://core.trac.wordpress.org/ticket/23282)
+**Add shortcodes for inline HTML5 audio / video**
+
+| Field | Value |
+|-------|-------|
+| Contribution | 💬 Comment |
+| Props | ❌ Not Given |
+| Status | closed ((fixed)) |
+| Milestone | 3.6 |
 
 ## Posts, Post Types
 
@@ -193,8 +271,8 @@ Total **13** tickets where I participated.
 
 | Category | Count |
 |----------|------:|
-| 📝 Total Tickets | 13 |
-| ✅ Props Received | 2 |
-| 🔒 Merged/Fixed | 3 |
+| 📝 Total Tickets | 20 |
+| ✅ Props Received | 4 |
+| 🔒 Merged/Fixed | 7 |
 | 🧪 Test Reports | 11 |
 | 📝 Patches | 0 |

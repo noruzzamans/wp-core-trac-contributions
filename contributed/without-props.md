@@ -4,7 +4,7 @@ Tickets where I contributed but haven't received props.
 
 <!-- AUTO-SYNC - DO NOT EDIT -->
 
-## ⏳ Pending (10)
+## ⏳ Pending (12)
 
 These are still open - will get props once merged!
 
@@ -51,12 +51,18 @@ These are still open - will get props once merged!
   - **Focuses**: ui, accessibility, administration
   - **Keywords**: has-screenshots has-patch has-test-info commit
 
+- ⏳ [#40464](https://core.trac.wordpress.org/ticket/40464) - Embed video in Wordpress gives W3c Markup Validation issue
+  - **Type**: 💬 Comment | **Component**: Embeds | **Milestone**: Awaiting Review | **Status**: new
+
 - ⏳ [#29798](https://core.trac.wordpress.org/ticket/29798) - unified theme and plugin uploader
   - **Type**: 🧪 Test Report | **Component**: General | **Milestone**: Future Release | **Status**: new
   - **Focuses**: administration
   - **Keywords**: has-patch good-first-bug needs-testing
 
-## ❌ Merged Without Props (1)
+- ⏳ [#3858](https://core.trac.wordpress.org/ticket/3858) - unclosed apply_filters() in /wp-includes/feed.php
+  - **Type**: 💬 Comment | **Component**: General | **Status**: closed
+
+## ❌ Merged Without Props (4)
 
 These were merged but I didn't get props.
 
@@ -65,8 +71,18 @@ These were merged but I didn't get props.
   - **Focuses**: docs, coding-standards
   - **Keywords**: has-patch
 
+- ❌ [#32444](https://core.trac.wordpress.org/ticket/32444) - Scrutinizer in 4.3
+  - **Type**: 💬 Comment | **Component**: General | **Milestone**: 4.3
+
+- ❌ [#23282](https://core.trac.wordpress.org/ticket/23282) - Add shortcodes for inline HTML5 audio / video
+  - **Type**: 💬 Comment | **Component**: Media | **Milestone**: 3.6
+
+- ❌ [#5300](https://core.trac.wordpress.org/ticket/5300) - User registration time not being saved
+  - **Type**: 💬 Comment | **Component**: General | **Milestone**: 2.5
+  - **Keywords**: has-patch commit
+
 ---
 | Status | Count |
 |--------|------:|
-| ⏳ Pending | 10 |
-| ❌ Merged (No Props) | 1 |
+| ⏳ Pending | 12 |
+| ❌ Merged (No Props) | 4 |
