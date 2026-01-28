@@ -124,7 +124,7 @@ Total **15** tickets where I participated.
 | Milestone | 7.0 |
 | Focuses | coding-standards |
 | Keywords | has-patch |
-| My Comments | 2 |
+| My Comments | 3 |
 
 ### 🔓 [#64065](https://core.trac.wordpress.org/ticket/64065)
 **Dragging theme/plugin ZIP outside file input field, downloads file instead of uploading.**
